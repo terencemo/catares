@@ -1,0 +1,9 @@
+$(document).ready(function() {
+  $('form input.target').change(function() {
+    $.get("[% c.uri_for('/search/fields') %]", {
+      target: this.value
+    }, function(data) {
+      $('#search-fields').html(data);
+    } );
+  } );
+} );

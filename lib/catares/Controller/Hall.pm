@@ -27,6 +27,36 @@ sub index :Path :Args(0) {
     $c->response->body('Matched catares::Controller::Hall in Hall.');
 }
 
+sub fields :Local {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{template} = 'hall/fields.tt';
+}
+
+sub manage :Chained('/') PathPart('halls/manage') {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{includes} = [ 'wufoo' ];
+    $c->stash->{process_file} = 'hall/manage.tt';
+}
+
+sub id : Chained('/') PathPart('hall') CaptureArgs(1) {
+    my ( $self, $c, $hall_id ) = @_;
+}
+
+sub edit :Chained('id') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{hall} = { name => 'Foo', descr => 'A hall called foo' };
+    $c->stash->{template} = 'hall/details.tt';
+}
+
+sub rates :Chained('id') PathPart('rates') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{includes} = [ 'wufoo' ];
+    $c->stash->{process_file} = 'hall/rates.tt';
+}
 
 =head1 AUTHOR
 

@@ -1,0 +1,24 @@
+#header-top {
+    padding: 10px 10px 5px 5px;
+}
+
+h1 {
+    margin: 0px 0px;
+}
+
+.footer {
+  margin: 0 0 0 10px;
+  height: 70px;
+  width: 95%;
+  color: #fff;
+}
+.footer td {
+  color: #000;
+}
+.footer a {
+  color: #000;
+}
+.footer a:hover {
+  color: green;
+}
+

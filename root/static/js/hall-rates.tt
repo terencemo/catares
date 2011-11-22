@@ -1,0 +1,16 @@
+$(document).ready(function() {
+[%-
+  FOREACH p1 IN [ 'Breakfast', 'Lunch', 'Tea', 'Dinner' ];
+    FOREACH p2 IN [ 'from', 'to' ];
+      pref = p1 _ '_' _ p2;
+-%]
+  $('select.[% pref %]_t').change(function() {
+    var hh = $('#[% pref %]_hh').val();
+    var mm = $('#[% pref %]_mm').val();
+    if (hh && mm) {
+      $('#[% pref %]_time').val(hh + ':' + mm);
+    }
+  } );
+[%- END;
+  END %]
+} );

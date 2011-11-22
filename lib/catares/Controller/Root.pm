@@ -31,6 +31,7 @@ sub index :Path :Args(0) {
 
     # Hello World
     $c->response->body( $c->welcome_message );
+    $c->res->redirect($c->uri_for('/search'));
 }
 
 =head2 default

@@ -1,0 +1,28 @@
+<li class="leftHalf">
+  <label class="desc">Room class</label>
+  <span>
+    <select class="field select">
+      <option> --- Select one --- </option>
+    </select>
+  </span>
+</li>
+
+<li class="rightHalf">
+  <label class="desc">No. of rooms</label>
+  <span>
+    <input class="field text medium" type="text" id="number" name="number">
+  </span>
+</li>
+
+<li class="leftHalf">
+  <label class="desc">Date(s)</label>
+  <span>
+    <input type="text" class="field text medium" size="10">
+  </span>
+</li>
+
+<li class="rightHalf">
+  <label class="desc">Check-in time</label>
+  [% INCLUDE 'html/time-select.tt' %]
+
+</li>

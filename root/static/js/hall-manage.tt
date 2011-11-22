@@ -1,0 +1,16 @@
+$(document).ready(function() {
+  $('li.likert table a.edit').click(function() {
+    $.get($(this).attr('href'), function(data) {
+      $('#hall-details').html(data);
+    } );
+    $('input.submit').attr('value', 'Edit Hall');
+    $('span.addlink').html('<a href="' + "[% c.uri_for('/halls/manage') %]" + '">Add Hall</a>');
+    return false;
+  } );
+  $('li.likert table a.delete').click(function() {
+    $.get($(this).attr('href'), {}, function(data) {
+    } );
+    $(this).parent().parent().html('');
+    return false;
+  } );
+} );

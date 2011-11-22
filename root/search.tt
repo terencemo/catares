@@ -1,0 +1,39 @@
+<form class="wufoo page" style="width: 450px">
+<header id="header" class="info">
+<h2>Availability Search</h2>
+<div>Search for halls / rooms</div>
+</header>
+
+<ul>
+  <li>
+    <label class="desc">In building</label>
+    <span>
+      <span class="field text">KROSS</span>
+    </span>
+  </li>
+  <li class="leftHalf">
+    <label class="desc">Search for</label>
+    <span>
+      <input type="radio" class="field radio target" name="target" id="target-hall" value="Hall">
+      <label class="choice" for="target-hall">Hall</label>
+    <span>
+  </li>
+  <li class="rightHalf">
+    <label class="desc">&nbsp;</label>
+    <span>
+      <input type="radio" class="field radio target" name="target" id="target-room" value="Room">
+      <label class="choice" for="target-room">Rooms</label>
+    <span>
+  </li>
+
+  <div id="search-fields">
+  </div>
+
+  <li class="buttons">
+    <input type="submit" value="Check Availability">
+  </li>
+
+</ul>
+
+</form>
+

@@ -1,0 +1,69 @@
+<style>
+.likert table th {
+  text-align: center;
+}
+li.likert table td {
+  font-size: 90%;
+}
+.likert table tbody td span {
+  display: inline;
+  float: left !important;
+}
+</style>
+
+<form class="wufoo page" style="width: 450px">
+<header id="header" class="info">
+<h2>Hall Rates</h2>
+<div>Manage Hall Rates</div>
+</header>
+
+<ul>
+  <li class="leftHalf">
+    <label class="desc">Hall Name</label>
+    <span>
+      <span type="text" class="field text" name="name" id="hall-name" size="25" value="[% hall.name %]"></span>
+    <span>
+  </li>
+
+  <li class="rightHalf">
+    <label class="desc">Brief Description</label>
+    <span>
+      <span type="text" class="field text" name="descr" id="hall-descr" size="40" value="[% hall.descr %]"></span>
+    <span>
+  </li>
+  <li></li>
+
+  <li class="likert">
+    <table cellspacing="0">
+    <thead>
+    <tr>
+      <th rowspan="2">Use for</th>
+      <th colspan="2">Hall usage time</th>
+      <th rowspan="2">Rate (Rs)</th>
+    </tr>
+    <tr>
+      <th>From</th>
+      <th>To</th>
+    </tr>
+    </thead>
+    <tbody>
+    [% i = 0 %]
+    [% FOREACH timeslot IN [ 'Breakfast', 'Lunch', 'Tea', 'Dinner' ] %]
+      <tr[% IF (i % 2); ' class="alt"'; END %]>
+        <td>[% timeslot %]</td>
+        <td>[% INCLUDE 'html/time-select.tt' prefix = timeslot _ '_from' %]</td>
+        <td>[% INCLUDE 'html/time-select.tt' prefix = timeslot _ '_to' %]</td>
+        <td><input type="text" name="[% timeslot %]_rate" size="8"></td>
+      </tr>
+      [% i = i + 1 %]
+    [% END %]
+    </tbody>
+    </table>
+  </li>
+
+  <li class="buttons">
+    <input class="submit" type="submit" value="Save Rates">
+  </li>
+</ul>
+
+</form>

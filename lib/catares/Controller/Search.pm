@@ -1,4 +1,4 @@
-package catares::Controller::Room;
+package catares::Controller::Search;
 use Moose;
 use namespace::autoclean;
 
@@ -6,7 +6,7 @@ BEGIN {extends 'Catalyst::Controller'; }
 
 =head1 NAME
 
-catares::Controller::Room - Catalyst Controller
+catares::Controller::Search - Catalyst Controller
 
 =head1 DESCRIPTION
 
@@ -24,14 +24,20 @@ Catalyst Controller.
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-    $c->response->body('Matched catares::Controller::Room in Room.');
+    my $conn = $c->stash->{Connection};
+#    $conn->get_halls();
+
+    $c->stash->{includes} = [ 'wufoo' ];
+    $c->stash->{process_file} = 'search.tt';
 }
 
 sub fields :Local {
     my ( $self, $c ) = @_;
 
-    $c->stash->{template} = 'room/fields.tt';
+    my $target = lc($c->req->params->{target});
+    $c->forward("/$target/fields");
 }
+
 
 =head1 AUTHOR
 

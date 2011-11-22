@@ -1,0 +1,27 @@
+[% DEFAULT
+    id_prefix = prefix.replace('([^-_])$', '$1_'),
+    name_prefix = id_prefix.replace('([^-_])$', '$1_');
+-%]
+
+<span><select class="field select [% id_prefix %]t" name="[% name_prefix %]hh" id="[% id_prefix %]hh">
+  [% h = 0 %]
+  [% WHILE h < 24 %]
+    [% hh = h > 9 ? h : "0" _ h %]
+    <option value="[% hh %]">[% hh %]</option>
+    [% h = h + 1 %]
+  [% END %]
+</select>
+<label>HH</label>
+</span>
+<span class="symbol">:</span>
+<span><select class="field select [% id_prefix %]t" name="[% name_prefix %]mm" id="[% id_prefix %]mm">
+  [% m = 0 %]
+  [% WHILE m < 60 %]
+    [% mm = m > 9 ? m : "0" _ m %]
+    <option value="[% mm %]">[% mm %]</option>
+    [% m = m + 5 %]
+  [% END %]
+</select><label>MM</label>
+</span>
+<input type="hidden" id="[% id_prefix %]time" name="[% name_prefix %]time">
+

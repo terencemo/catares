@@ -1,0 +1,14 @@
+  <li class="leftHalf">
+    <label class="desc">Hall Name</label>
+    <span>
+      <input type="text" class="field text" name="name" id="hall-name" size="25" value="[% hall.name %]">
+    <span>
+  </li>
+
+  <li class="rightHalf">
+    <label class="desc">Brief Description</label>
+    <span>
+      <input type="text" class="field text" name="descr" id="hall-descr" size="40" value="[% hall.descr %]">
+    <span>
+  </li>
+
