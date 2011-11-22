@@ -13,9 +13,12 @@ __PACKAGE__->add_columns(
                             size => 50
                         },
                         pass => {
-                            data_type => '50'                        },
+                            data_type => 'varchar',
+                            size => 50
+                        },
                         lastlogin => {
-                            data_type => 'datetime'                        },
+                            data_type => 'datetime'
+                        },
                         fullname => {
                             data_type => 'varchar',
                             size => 255
