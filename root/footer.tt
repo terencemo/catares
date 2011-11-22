@@ -1,0 +1,9 @@
+    <table class="footer">
+      <tr>
+        <td>&copy 2011, Kross Bangalore</td>
+      </tr>
+    </table>
+    </div>
+<img id="bottom" src="[% c.uri_for('/static/images/bottom.png') %]" alt="" />
+[% PROCESS 'foot-section.tt' %]
+

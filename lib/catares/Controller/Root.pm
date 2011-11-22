@@ -51,7 +51,50 @@ Attempt to render a view, if needed.
 
 =cut
 
-sub end : ActionClass('RenderView') {}
+sub end : ActionClass('RenderView') {
+    my ( $self, $c ) = @_;
+
+    return 1 if $c->res->body();
+
+    $c->stash->{template} ||= 'index.tt';
+    unless ($c->stash->{process_file}) {
+        my $pf = lc($c->req->path);
+        $pf =~ s/::/\//g;
+        $c->stash->{process_file} = "$pf.tt";
+    }
+
+    if ($c->stash->{includes}) {
+        foreach my $include (@{ $c->stash->{includes} } ) {
+            my $styles = $c->config->{includes}->{$include}->{styles};
+            if (defined $styles) {
+                $styles = [ $styles ] if (ref($styles) ne 'ARRAY');
+                $c->stash->{styles} = $styles;
+            }
+
+            my $scripts = $c->config->{includes}->{$include}->{scripts};
+            if (defined $scripts) {
+                $scripts = [ $scripts ] if (ref($scripts) ne 'ARRAY');
+                $c->stash->{scripts} = $scripts;
+            }
+        }
+    }
+
+    my $file = $c->stash->{process_file};
+    $file =~ s/\//-/g;
+    my $css_file = $file;
+    $css_file =~ s/tt$/css/;
+    my $static_dir = $c->path_to('/root');
+    my $stylesheet = "static/css/$css_file";
+    if ( ! $c->stash->{stylesheet} and -f $static_dir->file($stylesheet) ) {
+        $c->stash->{stylesheet} = "/$stylesheet";
+    }
+    my $script = "static/js/$file";
+    if ( -f $static_dir->file($script) ) {
+        $c->stash->{script} = $script;
+    }
+
+    $c->forward($c->view("TT"));
+}
 
 =head1 AUTHOR
 

@@ -1,0 +1,17 @@
+[% PROCESS header.tt %]
+
+    [% IF msg OR c.flash.msg -%]
+      <div id=msg>[% msg || c.flash.msg %]</div>
+    [%- END -%]
+
+    [% PROCESS $process_file %]
+      
+[%# PROCESS client/dashboard.tt %]
+[%# PROCESS details/recent_request_details.tt %]
+
+[%- IF c.session_expires -%]
+  [% PROCESS right.tt %]
+[%- END -%]
+
+[% PROCESS footer.tt %]
+

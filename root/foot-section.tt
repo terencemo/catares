@@ -1,0 +1,9 @@
+   [% FOREACH scr IN scripts %]
+   <script src="[% c.uri_for(scr) %]"></script>
+   [%- END %]
+  </div>
+  <script>
+   [% PROCESS $script IF script %]
+  </script>
+  </body>
+</html>

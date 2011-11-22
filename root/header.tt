@@ -1,0 +1,23 @@
+[% PROCESS 'head-section.tt' %]
+
+<div id="container">
+  <div id="header-top">
+ [% UNLESS c.req.path.match('^log') %]
+  <div style="float: right"><img src="[% c.uri_for('/static/images/user.png') %]">
+  [% IF c.session_expires -%]
+    <b>[%- c.session.name %]</b> 
+      |  <a href="[% c.uri_for('/logout') %]">Logout</a>
+  [% ELSE %]
+    <b>Guest</b>
+      | <a href="[% c.uri_for('/login') %]">Login</a>
+  [% END %]
+  </div>
+ [%- END -%]
+  <div style="width: 250px">
+  <h1><a href="[% c.uri_for('/') %]"><img src="[%-
+    c.uri_for('/static/images/catares-logo.jpg') %]"></a></h1></div>
+  [%- IF c.session_expires -%]
+      [% PROCESS menu.tt %]
+  [%- END -%]
+  </div>
+
