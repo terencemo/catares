@@ -1,7 +1,9 @@
     <table class="footer">
       <tr>
-        <td>&copy 2011, Kross Bangalore</td>
-        <td align="right"><img src="[% c.uri_for('/static/images/btn_120x50_powered_shadow.png') %]"></td>
+        <td>&copy 2011, <a href="http://krossbangalore.org">Kross Bangalore</a></td>
+        <td align="right">
+          <a href="http://www.catalystframework.org">
+            <img src="[% c.uri_for('/static/images/btn_120x50_powered_shadow.png') %]"></a></td>
       </tr>
     </table>
     </div>
