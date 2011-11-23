@@ -33,7 +33,7 @@ sub fields :Local {
     $c->stash->{template} = 'hall/fields.tt';
 }
 
-sub manage :Chained('/') PathPart('halls/manage') {
+sub manage :Chained('/building/id') PathPart('halls') {
     my ( $self, $c ) = @_;
 
     $c->stash->{includes} = [ 'wufoo' ];
@@ -56,6 +56,11 @@ sub rates :Chained('id') PathPart('rates') Args(0) {
 
     $c->stash->{includes} = [ 'wufoo' ];
     $c->stash->{process_file} = 'hall/rates.tt';
+}
+
+sub delete :Chained('id') PathPart('delete') Args(0) {
+    my ( $self, $c ) = @_;
+
 }
 
 =head1 AUTHOR

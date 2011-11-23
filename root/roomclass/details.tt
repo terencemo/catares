@@ -1,0 +1,21 @@
+  <li class="leftHalf">
+    <label class="desc">Room Class</label>
+    <span>
+      <input type="text" class="field text" name="name" id="rc-name" size="25" value="[% rc.name %]">
+    <span>
+  </li>
+
+  <li class="rightHalf">
+    <label class="desc">Daily Rate (Rs)</label>
+    <span>
+      <input type="text" class="field text" name="rate" id="rc-rate" size="25" value="[% rc.rate %]">
+    <span>
+  </li>
+
+  <li>
+    <label class="desc">Brief Description</label>
+    <span>
+      <input type="text" class="field text" name="descr" id="rc-descr" size="40" value="[% rc.descr %]">
+    <span>
+  </li>
+

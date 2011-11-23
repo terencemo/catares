@@ -1,0 +1,41 @@
+<form class="wufoo page" style="width: 450px">
+<header id="header" class="info">
+<h2>Room Classes</h2>
+<div>Create / Edit Room Classes</div>
+</header>
+
+<ul>
+  <div id="rc-details">
+    [% INCLUDE 'roomclass/details.tt' %]
+  </div>
+
+  <li class="buttons">
+    <input class="submit" type="submit" value="Add Room Class">
+    <span class="right addlink"></span>
+  </li>
+
+  <p></p>
+
+  <li class="likert">
+    <table cellspacing="0">
+    <thead>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Rate</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </thead>
+    <tbody>
+    [% i = 0 %]
+    [% FOREACH rc IN [ { id => 1 }, { id => 2 } ] %]
+      [% PROCESS 'roomclass/row.tt' %]
+      [% i = i + 1 %]
+    [% END %]
+    </tbody>
+    </table>
+  </li>
+</ul>
+
+</form>

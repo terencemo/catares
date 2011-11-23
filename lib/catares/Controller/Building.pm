@@ -27,6 +27,10 @@ sub index :Path :Args(0) {
     $c->response->body('Matched catares::Controller::Building in Building.');
 }
 
+sub id : Chained('/') PathPart('building') CaptureArgs(1) {
+    my ( $self, $c, $building_id ) = @_;
+
+}
 
 =head1 AUTHOR
 

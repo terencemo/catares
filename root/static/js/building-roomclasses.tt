@@ -1,10 +1,10 @@
 $(document).ready(function() {
   $('li.likert table a.edit').click(function() {
     $.get($(this).attr('href'), function(data) {
-      $('#hall-details').html(data);
+      $('#rc-details').html(data);
     } );
-    $('input.submit').attr('value', 'Edit Hall');
-    $('span.addlink').html('<a href="' + $('form').attr('action') + '">Add Hall</a>');
+    $('input.submit').attr('value', 'Edit Room');
+    $('span.addlink').html('<a href="' + $('form').attr('action') + '">Add Room Class</a>');
     return false;
   } );
   $('li.likert table a.delete').click(function() {

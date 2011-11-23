@@ -1,0 +1,66 @@
+<style>
+.likert table th {
+  text-align: center;
+}
+li.likert table td {
+  font-size: 90%;
+}
+.likert table tbody td span {
+  display: inline;
+  float: left !important;
+}
+</style>
+
+<form class="wufoo page" style="width: 450px">
+<header id="header" class="info">
+<h2>Manage Rooms</h2>
+<div>Add/delete Rooms of a class</div>
+</header>
+
+<ul>
+  <li class="leftHalf">
+    <label class="desc">Room Class</label>
+    <span>
+      <span type="text" class="field text" name="name" id="hall-name" size="25" value="[% hall.name %]"></span>
+    <span>
+  </li>
+
+  <li class="rightHalf">
+    <label class="desc">Brief Description</label>
+    <span>
+      <span type="text" class="field text" name="descr" id="hall-descr" size="40" value="[% hall.descr %]"></span>
+    <span>
+  </li>
+  <li></li>
+
+  <li class="likert">
+    <table cellspacing="0">
+    <caption>
+      Enter room no for each room of this class
+    </caption>
+    <thead>
+    <tr>
+      <th colspan="2">List of Room Nos</th>
+      <th colspan="5">&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    [% FOREACH i IN [ 0..4 ] %]
+      <tr[% IF (i % 2); ' class="alt"'; END %]>
+      [% j = i*6 + 1 %]
+      [% WHILE j <= (i+1)*6 %]
+        <td><input type="text" name="room_no_[% j %]" size="6"></td>
+        [% j = j + 1 %]
+      [% END %]
+      </tr>
+    [% END %]
+    </tbody>
+    </table>
+  </li>
+
+  <li class="buttons">
+    <input class="submit" type="submit" value="Save Rooms">
+  </li>
+</ul>
+
+</form>
