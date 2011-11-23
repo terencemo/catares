@@ -1,6 +1,7 @@
     <table class="footer">
       <tr>
         <td>&copy 2011, Kross Bangalore</td>
+        <td align="right"><img src="[% c.uri_for('/static/images/btn_120x50_powered_shadow.png') %]"></td>
       </tr>
     </table>
     </div>
