@@ -1,0 +1,58 @@
+function bind_hall_edit() {
+  $('li.likert table a.edit').click(function() {
+    var url = $(this).attr('href');
+    $.get(url, function(data) {
+      $('#hall-details').html(data);
+      $('#hall-form').attr('action', url);
+      bind_hall_edit_save();
+    } );
+    $('input.submit').attr('value', 'Edit Hall');
+    $('span.addlink').html('<a href="' +
+      "[% c.uri_for('/building') %]/" + $('#building-id').val() + '/halls">Add Hall</a>');
+    return false;
+  } );
+}
+
+function bind_hall_edit_save() {
+  $('#hall-form').submit(function() {
+    var hall_id = $('#hall-id').val();
+    $.post($(this).attr('action'), {
+      hall: hall_id,
+      name: $('#hall-name').val(),
+      descr: $('#hall-descr').val()
+    }, function(data) {
+      $('li.likert table tbody tr.hall_' + hall_id).html(data);
+    } );
+    return false;
+  } );
+}
+
+function bind_hall_delete() {
+  $('li.likert table a.delete').click(function() {
+    $.get($(this).attr('href'), function(data) {
+      $(this).parent().parent().html('');
+    } );
+    return false;
+  } );
+}
+
+$(document).ready(function() {
+  $('#hall-form').submit(function() {
+    $.post($(this).attr('action'), {
+      building: $('#building-id').val(),
+      name: $('#hall-name').val(),
+      descr: $('#hall-descr').val()
+    }, function(data) {
+      var n = $('li.likert table tbody').children().length;
+      $('li.likert table tbody').append(data);
+      if (n % 2) {
+        $('li.likert table tbody').children().last().addClass('alt');
+      }
+      bind_hall_edit();
+      bind_hall_delete();
+    } );
+    return false;
+  } );
+  bind_hall_edit();
+  bind_hall_delete();
+} );

@@ -11,7 +11,7 @@ li.likert table td {
 }
 </style>
 
-<form class="wufoo page" style="width: 450px">
+<form class="wufoo page" style="width: 450px" method="POST" action="[% c.req.uri %]">
 <header id="header" class="info">
 <h2>Manage Rooms</h2>
 <div>Add/delete Rooms of a class</div>
@@ -21,19 +21,20 @@ li.likert table td {
   <li class="leftHalf">
     <label class="desc">Room Class</label>
     <span>
-      <span type="text" class="field text" name="name" id="hall-name" size="25" value="[% hall.name %]"></span>
+      <span type="text" class="field text" name="name" id="hall-name" size="25">[% rc.name %]</span>
     <span>
   </li>
 
   <li class="rightHalf">
     <label class="desc">Brief Description</label>
     <span>
-      <span type="text" class="field text" name="descr" id="hall-descr" size="40" value="[% hall.descr %]"></span>
+      <span type="text" class="field text" name="descr" id="hall-descr" size="40">[% rc.descr %]</span>
     <span>
   </li>
   <li></li>
 
   <li class="likert">
+    <input type="hidden" name="rc" value="[% rc.id %]">
     <table cellspacing="0">
     <caption>
       Enter room no for each room of this class
@@ -49,7 +50,8 @@ li.likert table td {
       <tr[% IF (i % 2); ' class="alt"'; END %]>
       [% j = i*6 + 1 %]
       [% WHILE j <= (i+1)*6 %]
-        <td><input type="text" name="room_no_[% j %]" size="6"></td>
+        [% r = rooms.next %]
+        <td><input type="text" name="rno_[% r ? r.id : 'n' %]" size="6" value="[% r.number %]"></td>
         [% j = j + 1 %]
       [% END %]
       </tr>

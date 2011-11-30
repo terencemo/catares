@@ -1,0 +1,7 @@
+    <td>[% rc.id %]</td>
+    <td>[% rc.name %]</td>
+    <td>[% rc.descr %]</td>
+    <td>[% rc.rate %]</td>
+    <td><a class="edit" href="[% c.uri_for('/roomclass' rc.id 'edit') %]">Edit</a></td>
+    <td><a class="delete" href="[% c.uri_for('/roomclass' rc.id 'delete') %]">Delete</a></td>
+    <td><a class="rooms" href="[% c.uri_for('/roomclass' rc.id 'rooms') %]">Rooms</a></td>

@@ -19,3 +19,7 @@
     <span>
   </li>
 
+  [% IF rc -%]
+  <input type="hidden" id="rc-id" name="rc_id" value="[% rc.id %]">
+  [%- END %]
+

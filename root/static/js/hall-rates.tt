@@ -1,7 +1,7 @@
 $(document).ready(function() {
 [%-
   FOREACH p1 IN [ 'Breakfast', 'Lunch', 'Tea', 'Dinner' ];
-    FOREACH p2 IN [ 'from', 'to' ];
+    FOREACH p2 IN [ 'start', 'end' ];
       pref = p1 _ '_' _ p2;
 -%]
   $('select.[% pref %]_t').change(function() {

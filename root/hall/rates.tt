@@ -11,7 +11,7 @@ li.likert table td {
 }
 </style>
 
-<form class="wufoo page" style="width: 450px">
+<form class="wufoo page" style="width: 450px" method="POST" action="[% c.req.uri %]">
 <header id="header" class="info">
 <h2>Hall Rates</h2>
 <div>Manage Hall Rates</div>
@@ -21,20 +21,21 @@ li.likert table td {
   <li class="leftHalf">
     <label class="desc">Hall Name</label>
     <span>
-      <span type="text" class="field text" name="name" id="hall-name" size="25" value="[% hall.name %]"></span>
+      <span type="text" class="field text" id="hall-name">[% hall.name %]</span>
     <span>
   </li>
 
   <li class="rightHalf">
     <label class="desc">Brief Description</label>
     <span>
-      <span type="text" class="field text" name="descr" id="hall-descr" size="40" value="[% hall.descr %]"></span>
+      <span type="text" class="field text" id="hall-descr">[% hall.descr %]</span>
     <span>
   </li>
   <li></li>
 
   <li class="likert">
     <table cellspacing="0">
+    <caption>Enter check-in, check-out times and rate for hall<caption>
     <thead>
     <tr>
       <th rowspan="2">Use for</th>
@@ -48,12 +49,18 @@ li.likert table td {
     </thead>
     <tbody>
     [% i = 0 %]
-    [% FOREACH timeslot IN [ 'Breakfast', 'Lunch', 'Tea', 'Dinner' ] %]
+    [% hthash = {} %]
+    [% WHILE ( hts = halltimeslots.next ) %]
+      [% tsid = hts.timeslot_id %]
+      [% hthash.$tsid = hts %]
+    [% END %]
+    [% WHILE ( ts = timeslots.next ) %]
+      [% hts = hthash.item(ts.id) %]
       <tr[% IF (i % 2); ' class="alt"'; END %]>
-        <td>[% timeslot %]</td>
-        <td>[% INCLUDE 'html/time-select.tt' prefix = timeslot _ '_from' %]</td>
-        <td>[% INCLUDE 'html/time-select.tt' prefix = timeslot _ '_to' %]</td>
-        <td><input type="text" name="[% timeslot %]_rate" size="8"></td>
+        <td>[% ts.name %]</td>
+        <td>[% INCLUDE 'html/time-select.tt' prefix = ts.name _ '_start', showtime = hts.start %]</td>
+        <td>[% INCLUDE 'html/time-select.tt' prefix = ts.name _ '_end', showtime = hts.end %]</td>
+        <td><input type="text" name="[% ts.name %]_rate" size="8" value="[% hts.rate %]"></td>
       </tr>
       [% i = i + 1 %]
     [% END %]

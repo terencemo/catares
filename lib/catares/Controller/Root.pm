@@ -34,6 +34,31 @@ sub index :Path :Args(0) {
     $c->res->redirect($c->uri_for('/search'));
 }
 
+sub auto : Private {
+    my ( $self, $c ) = @_;
+
+    if ($c->req->path !~ m/^(login|logout)$/ and
+            ($c->session_expires == 0 or !$c->session->{name})) {
+#        $c->stash->{process_file} = 'login.tt';
+#        $c->detach('/login');
+#        return 0;
+        $c->session->{name} = 'admin';
+        $c->session->{passcode} = 'd033e22ae348aeb5660fc2140aec35850c4da997';
+    }
+
+    if ('POST' eq $c->req->method and 'login' eq $c->req->path) {
+        return 1;
+    }
+
+    my $conn = $c->model('DBIC')->login(
+        name => $c->session->{name},
+        passcode => $c->session->{passcode} );
+
+    $c->stash->{Connection} = $conn;
+
+    return 1;
+}
+
 =head2 default
 
 Standard 404 error page

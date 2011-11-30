@@ -12,3 +12,7 @@
     <span>
   </li>
 
+  [% IF hall -%]
+  <input type="hidden" id="hall-id" name="hall_id" value="[% hall.id %]">
+  [%- END %]
+

@@ -1,0 +1,4 @@
+<tr class="hall_[% hall.id %][% IF (i % 2); ' alt'; END %]">
+  [% PROCESS 'hall/row-data.tt' %]
+</tr>
+

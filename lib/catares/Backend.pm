@@ -1,7 +1,8 @@
 package catares::Backend;
 use Moose;
 use catares::Schema;
-use Digest::MD5 qw/md5_hex/;
+use catares::Backend::Connection;
+use Digest::SHA1 qw/sha1_hex/;
 
 sub new {
     my $class = shift;
@@ -24,14 +25,15 @@ sub login {
         name => $args{'name'}
     } );
     if (my $row = $rs->first) {
-        my $pass = $args{pass};
-        return unless $pass;
+        my $pcode = $args{passcode};
+        unless ($pcode) {
+            my $pass = $args{pass};
+            return unless $pass;
+            $pcode = sha1_hex($pass)
+        }
 
-        my $auth = 0;
-        my $reg = $self->{reg};
-        if (md5_hex($pass) eq $row->pass) {
-
-            my $conn = mla::Backend::Connection->new( {
+        if ($pcode eq $row->pass) {
+            my $conn = catares::Backend::Connection->new( {
                 schema => $schema,
                 username => $row->name,
                 user => $row,
@@ -41,6 +43,5 @@ sub login {
     }
     return;
 }
-
 
 1;

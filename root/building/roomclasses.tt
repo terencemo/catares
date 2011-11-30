@@ -1,10 +1,11 @@
-<form class="wufoo page" style="width: 450px">
+<form id="rc-form" class="wufoo page" style="width: 450px" method="POST" action="[% c.uri_for('/roomclass/add') %]">
 <header id="header" class="info">
 <h2>Room Classes</h2>
 <div>Create / Edit Room Classes</div>
 </header>
 
 <ul>
+  <input type="hidden" id="building-id" value="[% building.id %]">
   <div id="rc-details">
     [% INCLUDE 'roomclass/details.tt' %]
   </div>
@@ -29,7 +30,7 @@
     </thead>
     <tbody>
     [% i = 0 %]
-    [% FOREACH rc IN [ { id => 1 }, { id => 2 } ] %]
+    [% WHILE ( rc = roomclasses.next ) %]
       [% PROCESS 'roomclass/row.tt' %]
       [% i = i + 1 %]
     [% END %]

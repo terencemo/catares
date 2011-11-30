@@ -1,10 +1,11 @@
-<form class="wufoo page" style="width: 450px">
+<form id="hall-form" class="wufoo page" style="width: 450px" method="POST" action="[% c.uri_for('/hall/add') %]">
 <header id="header" class="info">
 <h2>Manage Halls</h2>
 <div>Create / Edit Halls</div>
 </header>
 
 <ul>
+  <input type="hidden" id="building-id" name="building" value="[% building.id %]">
   <div id="hall-details">
     [% INCLUDE hall/details.tt %]
   </div>
@@ -28,15 +29,8 @@
     </thead>
     <tbody>
     [% i = 0 %]
-    [% FOREACH hall IN [ { id => 1 }, { id => 2 } ] %]
-      <tr[% IF (i % 2); ' class="alt"'; END %]>
-        <td>[% hall.id %]</td>
-        <td>[% hall.name %]</td>
-        <td>[% hall.descr %]</td>
-        <td><a class="edit" href="[% c.uri_for('/hall' hall.id 'edit') %]">Edit</a></td>
-        <td><a class="delete" href="[% c.uri_for('/hall' hall.id 'delete') %]">Delete</a></td>
-        <td><a class="rates" href="[% c.uri_for('/hall' hall.id 'rates') %]">Rates</a></td>
-      </tr>
+    [% WHILE (hall = halls.next) %]
+      [% PROCESS 'hall/row.tt' %]
       [% i = i + 1 %]
     [% END %]
     </tbody>
