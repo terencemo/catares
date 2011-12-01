@@ -1,8 +1,9 @@
 $(document).ready(function() {
 [%-
-  FOREACH p1 IN [ 'Breakfast', 'Lunch', 'Tea', 'Dinner' ];
+  CALL timeslots.reset;
+  WHILE ( ts = timeslots.next );
     FOREACH p2 IN [ 'start', 'end' ];
-      pref = p1 _ '_' _ p2;
+      pref = ts.name _ '_' _ p2;
 -%]
   $('select.[% pref %]_t').change(function() {
     var hh = $('#[% pref %]_hh').val();
