@@ -90,19 +90,22 @@ sub end : ActionClass('RenderView') {
     }
 
     if ($c->stash->{includes}) {
+        my ( $styles, $scripts ) = ( [], [] );
         foreach my $include (@{ $c->stash->{includes} } ) {
-            my $styles = $c->config->{includes}->{$include}->{styles};
-            if (defined $styles) {
-                $styles = [ $styles ] if (ref($styles) ne 'ARRAY');
-                $c->stash->{styles} = $styles;
+            my $new_styles = $c->config->{includes}->{$include}->{styles};
+            if (defined $new_styles) {
+                $new_styles = [ $new_styles ] if (ref($new_styles) ne 'ARRAY');
+                push(@$styles, @$new_styles);
             }
 
-            my $scripts = $c->config->{includes}->{$include}->{scripts};
-            if (defined $scripts) {
-                $scripts = [ $scripts ] if (ref($scripts) ne 'ARRAY');
-                $c->stash->{scripts} = $scripts;
+            my $new_scripts = $c->config->{includes}->{$include}->{scripts};
+            if (defined $new_scripts) {
+                $new_scripts = [ $new_scripts ] if (ref($new_scripts) ne 'ARRAY');
+                push(@$scripts, @$new_scripts);
             }
         }
+        $c->stash->{styles} = $styles;
+        $c->stash->{scripts} = $scripts;
     }
 
     my $file = $c->stash->{process_file};
