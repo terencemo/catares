@@ -4,7 +4,8 @@
 }
 </style>
 
-<form class="wufoo page" style="width: 450px">
+<form class="wufoo page" style="width: 450px" method="POST"
+  action="[% c.uri_for('/meals/manage') %]">
 <header id="header" class="info">
 <h2>Manage Meals</h2>
 <div>Fix rates for meals</div>
@@ -26,11 +27,17 @@
     </thead>
     <tbody>
     [% i = 0 %]
-    [% FOREACH timeslot IN [ 'Breakfast', 'Lunch', 'Tea', 'Dinner' ] %]
+    [% WHILE ( meal = meals.next ) %]
+      [% tsid = meal.timeslot_id %]
+      [% type = meal.type %]
+      [% mhash.$tsid.$type = meal.rate %]
+    [% END %]
+    [% WHILE ( ts = timeslots.next ) %]
+      [% tsm = mhash.item(ts.id) %]
       <tr[% IF (i % 2); ' class="alt"'; END %]>
-        <td>[% timeslot %]</td>
-        <td><input type="text" name="[% timeslot %]_veg_rate" size="8"></td>
-        <td><input type="text" name="[% timeslot %]_nonveg_rate" size="8"></td>
+        <td>[% ts.name %]</td>
+        <td><input type="text" name="[% ts.name %]_veg_rate" size="8" value="[% tsm.veg %]"></td>
+        <td><input type="text" name="[% ts.name %]_nonveg_rate" size="8" value="[% tsm.nonveg %]"></td>
       </tr>
       [% i = i + 1 %]
     [% END %]

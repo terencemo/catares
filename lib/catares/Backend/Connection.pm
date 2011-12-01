@@ -215,11 +215,6 @@ sub delete_room {
     $room->delete;
 }
 
-sub create_amenity {
-    my $self = shift;
-    my %args = @_;
-}
-
 sub get_hall_date_timeslot_bookings {
     my $self = shift;
     my %args = @_;
@@ -252,6 +247,117 @@ sub get_timeslots {
     my $self = shift;
 
     $self->schema->resultset('TimeSlots')->search();
+}
+
+sub create_meal {
+    my $self = shift;
+    my %args = @_;
+
+    my $parms = { map { $_ => $args{$_} } qw(type rate) };
+    die("type should be veg or nonveg")
+        unless ($parms->{type} =~ m/^(?:non|)veg$/);
+    $parms->{timeslot_id} = $args{timeslot}
+        or die("timeslot required for meal");
+    $self->schema->resultset('Meals')->create($parms)
+        or die("Unable to create meal: $@");
+}
+
+sub get_meal {
+    my $self = shift;
+    my %args = @_;
+
+    die("type should be veg or nonveg")
+        unless ($args{type} =~ m/^(non|)veg$/);
+    my $rs = $self->schema->resultset('Meals')->search( {
+        timeslot_id => $args{timeslot},
+        type        => $args{type}
+    } );
+
+    return $rs->first if $rs;
+}
+
+sub get_meals {
+    my $self = shift;
+
+    $self->schema->resultset('Meals')->search();
+}
+
+sub edit_meal {
+    my $self = shift;
+    my %args = @_;
+
+    my $parms = { map { $_ => $args{$_} } qw(type rate) };
+    die("type should be veg or nonveg")
+        unless ($parms->{type} =~ m/^(?:non|)veg$/);
+    $parms->{timeslot_id} = $args{timeslot}
+        or die("timeslot required for meal");
+    $self->schema->resultset('Meals')->update($parms)
+        or die("Unable to edit meal: $@");
+}
+
+sub delete_meal {
+    my $self = shift;
+    my %args = @_;
+
+    if ($args{type} and $args{timeslot}) {
+        die("type should be veg or nonveg")
+            unless ($args{type} =~ m/^(non|)veg$/);
+        my $rs = $self->schema->resultset('Meals')->search( {
+            timeslot_id => $args{timeslot},
+            type        => $args{type}
+        } );
+        my $meal = $rs->first or
+            die ("Can't find meal ts:".$args{timeslot}.", type:".$args{type});
+        eval $meal->delete;
+        if ($@) {
+            die ("Unable to delete meal: $@");
+        }
+    }
+}
+
+sub create_amenity {
+    my $self = shift;
+    my %args = @_;
+
+    my $parms = { map {
+        $_ => $args{$_}
+    } qw(name rate for_hall for_room) };
+
+    $self->schema->resultset('Amenities')->create($parms)
+        or die("Could not create amenity: $@");
+}
+
+sub get_amenity {
+    my ( $self, $aid ) = @_;
+
+    $self->schema->resultset('Amenities')->find($aid);
+}
+
+sub get_amenities {
+    my $self = shift;
+
+    $self->schema->resultset('Amenities')->search();
+}
+
+sub edit_amenity {
+    my $self = shift;
+    my %args = @_;
+
+    my $aid = delete $args{id} or die("amenity id required for edit");
+    my $amenity = $self->get_amenity($aid);
+    my $parms = { map {
+        $_ => $args{$_}
+    } grep { $args{$_ } } qw(name rate for_hall for_room) };
+    $amenity->update($parms);
+}
+
+sub delete_amenity {
+    my ( $self, $aid ) = @_;
+
+    die("Need amenity id to delete") unless $aid;
+    my $amenity = $self->schema->resultset('Amenities')->find($aid)
+        or die("Couldn't find amenity with id $aid");
+    $amenity->delete;
 }
 
 1;

@@ -27,6 +27,46 @@ sub index :Path :Args(0) {
     $c->response->body('Matched catares::Controller::Meal in Meal.');
 }
 
+sub manage :Chained('/') PathPart('meals/manage') {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    my $timeslots = $conn->get_timeslots();
+    if ('POST' eq $c->req->method()) {
+        my $mcount = 0;
+        while (my $ts = $timeslots->next()) {
+            foreach my $type (qw(veg nonveg)) {
+                my %parms = (
+                    timeslot    => $ts->id,
+                    type        => $type
+                );
+                my $key = sprintf("%s_%s_rate", $ts->name, $type);
+                my $rate = $c->req->params->{$key};
+                my $meal;
+                if ($meal = $conn->get_meal(%parms)) {
+                    eval ++$mcount if $conn->edit_meal(%parms, rate => $rate);
+                    if ($@) {
+                        $c->log->warn("Failed to edit meal: $@");
+                    }
+                } else {
+                    eval ++$mcount if $conn->create_meal(%parms, rate => $rate);
+                    if ($@) {
+                        $c->log->warn("Failed to create meal: $@");
+                    }
+                }
+            }
+        }
+        if ($mcount) {
+            $c->stash->{msg} = "$mcount meals saved successfully";
+        }
+        $timeslots->reset();
+    }
+    
+    $c->stash->{meals} = $conn->get_meals();
+    $c->stash->{timeslots} = $timeslots;
+    $c->stash->{process_file} = 'meal/manage.tt';
+    $c->stash->{includes} = [ 'wufoo' ];
+}
 
 =head1 AUTHOR
 
