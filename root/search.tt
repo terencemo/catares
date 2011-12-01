@@ -8,7 +8,17 @@
   <li>
     <label class="desc">In building</label>
     <span>
-      <span class="field text">KROSS</span>
+    [% IF (buildings.count == 1) -%]
+      [% building = buildings.first %]
+      <span class="field text">[% building.name %]</span>
+      <input id="building" type="hidden" name="building" value="[% building.id %]">
+    [% ELSE %]
+      <select id="building" name="building">
+      [% WHILE (building = buildings.next) %]
+        <option value="[% building.id %]">[% building.name %]</option>
+      [% END %]
+      </select>
+    [% END %]
     </span>
   </li>
   <li class="leftHalf">

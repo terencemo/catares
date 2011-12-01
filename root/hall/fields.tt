@@ -1,16 +1,38 @@
+<style>
+#hall-date {
+  float:left;
+  display:inline;
+  width:110px !important;
+}
+#dtPicker {
+  float:left;
+  padding:3px;
+}
+</style>
+
 <li>
   <label class="desc">Hall name</label>
   <span>
-    <select class="field select">
+  [% IF ( halls.count == 1 ) %]
+    [% hall = halls.first %]
+    <span>[% hall.name %]</span>
+    <input id="hall" name="hall" type="hidden" value="[% hall.id %]">
+  [% ELSE %]
+    <select class="field select" id="hall" name="hall">
       <option> --- Select one --- </option>
+    [% WHILE ( hall = halls.next ) %]
+      <option value="[% hall.id %]">[% hall.name %]</option>
+    [% END %]
     </select>
+  [% END %]
   </span>
 </li>
 
 <li class="leftHalf">
   <label class="desc">Date(s)</label>
   <span>
-    <input type="text" class="field text medium" size="10">
+    <input id="hall-date" type="text" class="field text medium" size="10">
+    <img id="dtPicker" src="[% c.uri_for('/static/images/cal4.jpg') %]">
   </span>
 </li>
 
@@ -19,6 +41,9 @@
   <span>
     <select class="field select">
       <option> --- Select one --- </option>
+      [% WHILE (ts = timeslots.next) %]
+        <option value="[% ts.id %]">[% ts.name %]</option>
+      [% END %]
     </select>
   </span>
 </li>

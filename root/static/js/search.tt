@@ -1,9 +1,20 @@
 $(document).ready(function() {
   $('form input.target').change(function() {
+    var target = this.value;
     $.get("[% c.uri_for('/search/fields') %]", {
-      target: this.value
+      building: $('#building').val(),
+      target: target
     }, function(data) {
       $('#search-fields').html(data);
+      if ('Hall' == target) {
+        Calendar.setup( {
+            inputField      :       "hall-date",
+            ifFormat        :       "%Y-%m-%d",
+            button          :       "dtPicker",
+            align           :       "Bl",
+            singleClick     :       true
+        } );
+      }
     } );
   } );
 } );

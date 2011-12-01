@@ -31,6 +31,10 @@ sub index :Path :Args(0) {
 sub fields :Local {
     my ( $self, $c ) = @_;
 
+    my $conn = $c->stash->{Connection};
+    my $bldg_id = $c->req->params->{building};
+    $c->stash->{halls} = $conn->get_building_halls($bldg_id);
+    $c->stash->{timeslots} = $conn->get_timeslots();
     $c->stash->{template} = 'hall/fields.tt';
 }
 

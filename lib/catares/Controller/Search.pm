@@ -27,7 +27,8 @@ sub index :Path :Args(0) {
     my $conn = $c->stash->{Connection};
 #    $conn->get_halls();
 
-    $c->stash->{includes} = [ 'wufoo' ];
+    $c->stash->{buildings} = $conn->get_buildings();
+    $c->stash->{includes} = [ 'wufoo', 'calendar' ];
     $c->stash->{process_file} = 'search.tt';
 }
 
