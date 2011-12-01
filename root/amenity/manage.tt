@@ -1,0 +1,90 @@
+<style>
+#amenity-form {
+  width: 450px;
+}
+.likert table th {
+  text-align: center;
+}
+.likert table td {
+  font-size: 90%;
+}
+</style>
+
+<form id="amenity-form" class="wufoo page" method="POST" action="[% c.uri_for('/amenity/add') %]">
+<header id="header" class="info">
+<h2>Manage Amenities</h2>
+<div>Fix amenity usage, rates</div>
+</header>
+
+<ul>
+  <li class="leftHalf">
+  <span style="width:140px">
+    <label class="desc">Amenity Name</label>
+    <span>
+      <input type="text" class="field text" name="name" id="amenity-name" size="15" value="[% amenity.name %]" />
+    </span>
+  </span>
+
+  <span style="width:60px">
+    <label class="desc">Rate (Rs)</label>
+    <span>
+      <input type="text" class="field text" name="rate" id="amenity-rate" size="4" value="[% amenity.rate %]" />
+    </span>
+  </span>
+  </li>
+
+  <li class="rightHalf">
+  <span>
+    <label class="desc">Use for</label>
+    <span>
+      <input type="checkbox" class="checkbox" id="halls" name="for_hall"[% ' checked' IF amenity.for_hall %]>
+      <label class="choice" for="halls">Halls</label>
+    </span>
+    <span style="width:80px">
+      <input type="checkbox" class="checkbox" id="rooms" name="for_room"[% ' checked' IF amenity.for_room %]>
+      <label class="choice" for="rooms">Rooms</label>
+    </span>
+    <span>
+    <input class="image" type="image" src="[% c.uri_for('/static/images/add_20x20.png') %]" width="20" value="Add Amenity">
+    </span>
+  </span>
+  </li>
+
+  <!--li class="buttons">
+    <input class="submit" type="submit" value="Add Amenity">
+  </li>
+  </ul>
+
+</form>
+<form class="wufoo page" style="width: 450px">
+
+  <ul-->
+  <li class="likert">
+    <table cellspacing="0">
+    <thead>
+    <tr>
+      <th rowspan="2">Amenity</th>
+      <th colspan="2">Use for</th>
+      <th rowspan="2">Rate (Rs)</th>
+    </tr>
+    <tr>
+      <th>Halls</th>
+      <th>Rooms</th>
+    </tr>
+    </thead>
+    <tbody>
+    [% i = 0 %]
+    [% WHILE ( amenity = amenities.next ) %]
+      [% PROCESS 'amenity/row.tt' %]
+      [% i = i + 1 %]
+    [% END %]
+    </tbody>
+    </table>
+  </li>
+
+  <li class="buttons">
+    <input class="button" type="button" value="Save Amenities">
+  </li>
+</ul>
+
+</form>

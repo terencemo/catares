@@ -1,0 +1,25 @@
+$(document).ready(function() {
+  $('#amenity-form').submit(function() {
+    var url = $(this).attr('action');
+    if (url.match('manage$')) {
+      return true;
+    }
+    $.post(url, {
+      name: $('#amenity-name').val(),
+      rate: $('#amenity-rate').val(),
+      for_hall: ($('#halls').attr('checked') ? 1 : 0),
+      for_room: ($('#rooms').attr('checked') ? 1 : 0)
+    }, function(data) {
+      var n = $('li.likert table tbody').children().length;
+      $('li.likert table tbody').append(data);
+      if (n % 2) {
+        $('li.likert table tbody').children().last().addClass('alt');
+      }
+    } );
+    return false;
+  } );
+  $('input.button').click(function() {
+    $('#amenity-form').attr('action', "[% c.req.uri %]");
+    $('#amenity-form').submit();
+  } );
+} );
