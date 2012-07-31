@@ -11,6 +11,10 @@ __PACKAGE__->add_columns(
                         name => {
                             data_type => 'varchar',
                             size => 50
+                        },
+                        time => {
+                            data_type => 'varchar',
+                            size => 10
                         }
 );
 

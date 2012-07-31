@@ -1,11 +1,13 @@
 $(document).ready(function() {
-  $('form input.target').change(function() {
+  $('#search_form input.target').change(function() {
     var target = this.value;
     $.get("[% c.uri_for('/search/fields') %]", {
       building: $('#building').val(),
       target: target
     }, function(data) {
       $('#search-fields').html(data);
+      $('#search_form').attr('action', "[% c.uri_for('/') %]"
+        + target.toLowerCase() + "/search");
       if ('Hall' == target) {
         Calendar.setup( {
             inputField      :       "hall-date",
@@ -13,6 +15,30 @@ $(document).ready(function() {
             button          :       "dtPicker",
             align           :       "Bl",
             singleClick     :       true
+        } );
+      } else {
+        Calendar.setup( {
+            inputField      :       "checkin-date",
+            button          :       "dtCheckinPicker",
+            ifFormat        :       "%Y-%m-%d",
+            align           :       "Bl",
+            singleClick     :       true
+        } );
+        Calendar.setup( {
+            inputField      :       "checkout-date",
+            button          :       "dtCheckoutPicker",
+            ifFormat        :       "%Y-%m-%d",
+            align           :       "Bl",
+            singleClick     :       true
+        } );
+        $('select.checkin_t').change(function() {
+          var hh = $('#checkin_hh').val();
+          var mm = $('#checkin_mm').val();
+          if (hh && mm) {
+            var tm = hh + ':' + mm;
+            $('#checkin_time').val(tm);
+            $('#checkout_time').val(tm);
+          }
         } );
       }
     } );

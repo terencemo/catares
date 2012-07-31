@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::SQLite
--- Created on Thu Nov 10 20:07:32 2011
+-- Created on Thu Dec  1 20:28:53 2011
 -- 
 
 BEGIN TRANSACTION;
@@ -56,7 +56,7 @@ DROP TABLE users;
 CREATE TABLE users (
   id INTEGER PRIMARY KEY NOT NULL,
   name varchar(50) NOT NULL,
-  pass 50 NOT NULL,
+  pass varchar(50) NOT NULL,
   lastlogin datetime NOT NULL,
   fullname varchar(255) NOT NULL
 );
@@ -69,11 +69,11 @@ DROP TABLE billings;
 CREATE TABLE billings (
   id INTEGER PRIMARY KEY NOT NULL,
   booked_by integer NOT NULL,
-  created datetime NOT NULL,
-  charges double NOT NULL,
-  discount double NOT NULL,
-  total double NOT NULL,
-  deposit double NOT NULL
+  created datetime,
+  charges double,
+  discount double,
+  total double,
+  deposit double
 );
 
 CREATE INDEX billings_idx_booked_by ON billings (booked_by);

@@ -1,0 +1,108 @@
+<style>
+form {
+  width: 450px;
+}
+li.likert table caption {
+  font-size: 110%;
+}
+li.likert table caption a {
+  text-decoration: none;
+}
+input.qty {
+  text-align: center;
+}
+span.large {
+  font-size: 110%;
+}
+li.likert table {
+}
+li.likert table th {
+  text-align: center;
+}
+</style>
+
+<form id="room_booking" class="wufoo page" method="POST" action="[% c.uri_for('/rooms/book') %]">
+
+<input type="hidden" name="checkin" value="[% checkin %]">
+<input type="hidden" name="checkout" value="[% checkout %]">
+<input type="hidden" name="days" value="[% days %]">
+
+<ul>
+<li class="likert">
+<table cellspacing="0">
+  [% req = c.req.params.number %]
+  [% found = rooms.count %]
+  <caption>You requested <span class="large">[% req %]</span>rooms for [% days %] days.
+  [% short = 1 IF (found < req); short ? 'Only' : 'Total' %]
+  <span class="large">[% found %]</span>rooms are available.
+  [% IF short %]<a href="[% c.uri_for('/') %]">Search Again?</a>[% END %]
+  </caption>
+  <thead>
+  <tr>
+    <th rowspan="2">Room no</th>
+    <th colspan="5">Meals</th>
+    <th colspan="2">Preference</th>
+    <th rowspan="2">Daily<br>Cost</th>
+  </tr>
+  <tr>
+    [% WHILE ( ts = timeslots.next ) %]
+      <th>[% ts.name %]</th>
+    [% END %]
+    [% CALL timeslots.reset %]
+    <th>Qty</th>
+    <th>Veg</th>
+    <th>Non-veg</th>
+  </tr>
+  </thead>
+  <tbody>
+    [% WHILE (room = rooms.next) %]
+    <tr class="rm_[% room.id %]">
+      <td><input type="checkbox" id="rm_[% room.id %]" name="rm_[% room.id %]" class="rmchk" value="[% room.id %]">
+      <label class="choice" for="rm_[% room.id %]">[% room.number %]</label></td>
+      [% WHILE ( ts = timeslots.next ) %]
+        <td><input type="checkbox" class="checkbox meal time" id="rm_[% room.id %]_meal_[% ts.id %]" 
+          name="rm_[% room.id %]_meal" value="[% ts.id %]" disabled></td>
+      [% END %]
+      [% CALL timeslots.reset %]
+      <td><input type="text" class="meal qty text" id="rm_[% room.id %]_qty" name="rm_[% room.id %]_qty" size="1" value="1" disabled></td>
+      [% FOREACH type IN [ 'veg', 'nonveg' ] %]
+        <td><input type="radio" class="meal pref" id="rm_[% room.id %]_pref_[% type %]" name="rm_[% room.id %]_pref" value="[% type %]" disabled></td>
+      [% END %]
+      <td class="cost"></td>
+      <input type="hidden" class="roomcost" id="rm_[% room.id %]_cost" name="rm_[% room.id %]_cost">
+    </tr>
+    [% END %]
+  </tbody>
+</table>
+<span id="rm_sel">Kindly select upto [% short ? found : req %] rooms.</span>
+</li>
+
+[% i = 0 %]
+[% WHILE ( am = amenities.next ) %]
+[% NEXT UNLESS am.for_room %]
+<li class="[% i % 2 ? 'right' : 'left' %]Half">
+  <label class="desc">[% am.name %]</label>
+  <span>
+  [% IF am.multiple %]
+    <input class="field text amen" type="text" id="am_[% am.id %]" name="am_[% am.id %]" size="4" value="0">
+  [% ELSE %]
+    <input class="field checkbox amen" type="checkbox" id="am_[% am.id %]" name="am_[% am.id %]" value="1">
+  [% END %]
+  </span>
+</li>
+<input id="am_[% am.id %]_cost" type="hidden" value="[% am.rate %]">
+[% i = i + 1 -%]
+[% END %]
+
+<li id="est-total"></li>
+
+<input type="hidden" id="est-tot" name="est_total">
+
+<li class="submit">
+  <input id="form_action" name="form_action" type="hidden">
+  <input type="button" class="button book" value="Book More">
+  <input type="button" class="button bill" value="Bill">
+</li>
+</ul>
+
+</form>

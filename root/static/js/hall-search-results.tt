@@ -1,0 +1,85 @@
+function reval_cost(hid) {
+  var parms = new Object;
+  parms['qty'] = $('tr.h_' + hid + ' input.qty').val();
+  $('tr.h_' + hid + ' input.pref').each(function(i,e) {
+    if ($(e).attr('checked')) {
+      parms['type'] = $(e).attr('value');
+    }
+  } );
+  parms['timeslot'] = $('#timeslot').val();
+  $.get("[% c.uri_for('/hall/') %]" + hid + '/cost', parms, function(data) {
+    $('tr.h_' + hid + ' td.cost').html(data);
+    $('#h_' + hid + '_cost').val(data);
+    reval_total_cost();
+    $('input.amen').change(function() {
+      reval_total_cost();
+    } );
+  } );
+}
+
+function reval_total_cost() {
+  var baseCost = 0;
+  $('input.hallcost').each(function(i, e) {
+//    alert('Hall cost for ' + $(e).attr('id') + ' = ' + $(e).val());
+    if ($(e).val()) { 
+      baseCost += $(e).val()/1;
+    }
+  } );
+  $('input.amen').each(function(i, e) {
+    var num = 1;
+    if ('checkbox' == $(e).attr('type')) {
+      if ($(e).attr('checked') == false) {
+        return;
+      }
+    } else {
+      num = $(e).val();
+      if (num == 0) {
+        return;
+      }
+    }
+    var name = $(e).attr('name');
+    var acost = $('#' + name + '_cost').val() * num;
+    baseCost += acost;
+  } );
+  var cost = baseCost;
+  var html = 'Total estimated cost = ' + cost;
+
+  $('#est-total').html(html);
+  $('#est-tot').val(cost);
+}
+
+$(document).ready(function() {
+  $('input.hrad').change(function() {
+    if ($(this).attr('checked')) {
+      var hid = this.value;
+      $('tr.h_' + hid + ' input.meal').attr('disabled', false);
+      $('tr.h_' + hid + ' input.mchk').attr('checked', true);
+      $('tr.h_' + hid + ' input.pref').each(function(i, e) {
+        if ('veg' == e.value) {
+          $(e).attr('checked', true);
+        }
+      } );
+      reval_cost(hid);
+      $('tr.h_' + hid + ' input.meal').change(function() {
+        reval_cost(hid);
+      } );
+    } else {
+      var hid = this.value;
+      $('tr.h_' + hid + ' input.meal').attr('disabled', true);
+      $('tr.h_' + hid + ' input.mchk').attr('checked', false);
+      $('tr.h_' + hid + ' input.pref').attr('checked', false);
+      $('tr.h_' + hid + ' input.qty').val('');
+      $('tr.h_' + hid + ' td.cost').html('');
+    }
+  } );
+  $('li.submit input.button').click(function() {
+/*    $('input.hrad:checked').each(function(i, e) {
+      reval_cost(e.value);
+    } );*/
+    reval_total_cost();
+    if ($(this).hasClass('bill')) {
+      $('#form_action').val('bill');
+    }
+    $('#hall_booking').submit();
+  } );
+} );

@@ -1,0 +1,14 @@
+.mc-table {
+  border: 1px solid #aaa;
+  border-width: 1px 1px 0 0;
+  border-spacing: 0;
+  width: 500px;
+}
+
+.mc-table th,
+.mc-table td {
+  border: 1px solid #aaa;
+  border-width: 0 0 1px 1px;
+  padding: 3px 6px;
+  text-align: center;
+}

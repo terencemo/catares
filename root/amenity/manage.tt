@@ -65,6 +65,7 @@
     <tr>
       <th rowspan="2">Amenity</th>
       <th colspan="2">Use for</th>
+      <th rowspan="2">Multiple</th>
       <th rowspan="2">Rate (Rs)</th>
     </tr>
     <tr>

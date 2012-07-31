@@ -1,0 +1,38 @@
+#bill {
+  font-family: Times;
+  margin: 5px auto 5px 10px;
+}
+
+#billing-table {
+  width: 80%;
+}
+
+#billing-table th {
+  text-align: right;
+  font-family: Times;
+  font-weight: normal;
+  font-size: 120%;
+}
+
+#billing-table th.first,
+#billing-table td.first {
+  text-align: left;
+}
+
+#billing-table td.billitem {
+  font-size: 110%;
+}
+
+#billing-table thead th.descr {
+  width: 25%;
+}
+
+#billing-table thead th.rate,
+#billing-table thead th.amt {
+  width: 20%;
+}
+
+#billing-table thead th.qty,
+#billing-table thead th.days {
+  width: 15%;
+}

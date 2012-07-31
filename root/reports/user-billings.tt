@@ -1,0 +1,21 @@
+<table class="mc-table">
+<caption>Collections by [% user.name %]</caption>
+<thead>
+  <th>Date</th>
+  <th>Charges</th>
+  <th>Discount (%)</th>
+  <th>Total</th>
+  <th>Deposit</th>
+</thead>
+<tbody>
+[% WHILE (b = billings.next) %]
+  <tr>
+    <td>[% b.created %]</td>
+    <td>[% b.charges %]</td>
+    <td>[% b.discount %]</td>
+    <td>[% b.total %]</td>
+    <td>[% b.deposit %]</td>
+  </tr>
+[% END %]
+</tbody>
+</table>

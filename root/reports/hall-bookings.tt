@@ -1,0 +1,47 @@
+[% USE date %]
+<form class="wufoo" method="GET" action="[% c.uri_for('/reports/hall_bookings') %]">
+<header id="header" class="info">
+<h2>Daily Hall Bookings</h2>
+<div>Hall bookings on date</div>
+</header>
+<ul>
+  <li>
+    <label class="desc">Date: </label>
+    <input name="date" id="date" class="small" value="[% c.stash.date %]">
+    <img src="[% c.uri_for('/static/images/cal4.jpg') %]" id="pick_date">
+    <input type="submit">
+  </li>
+[% IF hbs %]
+<li>
+<table class="mc-table">
+<thead>
+<tr>
+  <th rowspan="1">Hall</th>
+  <th rowspan="1">For</th>
+  <th colspan="1">Time</th>
+  <th rowspan="1">Amenities</th>
+</tr>
+<!--tr>
+  <th>Start</th>
+  <th>End</th>
+</tr-->
+</thead>
+<tbody>
+[% WHILE (hb = hbs.next) %]
+  <tr>
+    <td>[% hb.halltimeslot.hall.name %]</td>
+    <td>[% hb.halltimeslot.timeslot.name %]</td>
+    <td>[% hb.halltimeslot.start %]
+    to [% hb.halltimeslot.end %]</td>
+    <td>[% habs = hb.hallamenitybookings; FOREACH hab IN habs;
+      hab.amenity.name %]:[% hab.count %]
+      [% END %]
+    </td>
+  </tr>
+[% END %]
+</tbody>
+</table>
+  </li>
+[% END %]
+</ul>
+</form>

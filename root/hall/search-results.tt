@@ -1,0 +1,96 @@
+<style>
+form {
+  width: 450px;
+}
+li.likert table caption {
+  font-size: 110%;
+}
+li.likert table caption a {
+  text-decoration: none;
+}
+input.qty {
+  text-align: center;
+}
+span.large {
+  font-size: 110%;
+}
+li.likert table {
+}
+li.likert table th {
+  text-align: center;
+}
+</style>
+
+<form id="hall_booking" class="wufoo page" method="POST" action="[% c.uri_for('/hall/book') %]">
+
+<input id="timeslot" type="hidden" name="timeslot" value="[% c.req.params.timeslot %]">
+<input id="date" type="hidden" name="date" value="[% c.req.params.date %]">
+
+<ul>
+<li class="likert">
+<table cellspacing="0">
+  <caption>
+  [% UNLESS halls.count %]<a href="[% c.uri_for('/') %]">Search Again?</a>[% END %]
+  </caption>
+  <thead>
+  <tr>
+    <th rowspan="2">Hall</th>
+    <th rowspan="2">Need food?</th>
+    <th colspan="2">Preference</th>
+    <th rowspan="2">Qty</th>
+    <th rowspan="2">Cost</th>
+  </tr>
+  <tr>
+    <th>Veg</th>
+    <th>Non-veg</th>
+  </tr>
+  </thead>
+  <tbody>
+    [% WHILE (hall = halls.next) %]
+    <tr class="h_[% hall.id %]">
+      <td><input type="radio" id="h_[% hall.id %]" name="hall" class="hrad radio" value="[% hall.id %]">
+      <label class="choice" for="h_[% hall.id %]">[% hall.name %]</label></td>
+      <td><input type="checkbox" class="meal mchk checkbox" id="h_[% hall.id %]_meal" name="h_[% hall.id %]_meal" value="1" disabled>
+      <label class="choice" for="h_[% hall.id %]_meal">Yes</label></td>
+      </td>
+      [% FOREACH type IN [ 'veg', 'nonveg' ] %]
+        <td><input type="radio" class="meal pref" id="h_[% hall.id %]_pref_[% type %]" name="h_[% hall.id %]_pref" value="[% type %]" disabled></td>
+      [% END %]
+      <td><input type="text" class="meal qty text" id="h_[% hall.id %]_qty" name="h_[% hall.id %]_qty" size="2" disabled></td>
+      <td class="cost"></td>
+      <input type="hidden" class="hallcost" id="h_[% hall.id %]_cost" name="h_[% hall.id %]_cost">
+    </tr>
+    [% END %]
+  </tbody>
+</table>
+</li>
+
+[% i = 0 %]
+[% WHILE ( am = amenities.next ) %]
+[% NEXT UNLESS am.for_hall %]
+<li class="[% i % 2 ? 'right' : 'left' %]Half">
+  <label class="desc">[% am.name %]</label>
+  <span>
+  [% IF am.multiple %]
+    <input class="field text amen" type="text" id="am_[% am.id %]" name="am_[% am.id %]" size="4" value="0">
+  [% ELSE %]
+    <input class="field checkbox amen" type="checkbox" id="am_[% am.id %]" name="am_[% am.id %]" value="1">
+  [% END %]
+  </span>
+</li>
+<input id="am_[% am.id %]_cost" type="hidden" value="[% am.rate %]">
+[% i = i + 1 -%]
+[% END %]
+
+<li id="est-total"></li>
+
+<input type="hidden" id="est-tot" name="est_total">
+
+<li class="submit">
+  <input id="form_action" name="form_action" type="hidden">
+  <input type="button" class="button book" value="Book More">
+  <input type="button" class="button bill" value="Bill">
+</li>
+</ul>
+
+</form>

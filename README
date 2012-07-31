@@ -1,0 +1,18 @@
+Run script/catares_server.pl to test the application.
+
+For database settings and to override the config, create a file
+catares_local.conf. A sample file is shown below:
+
+    orgname KROSS
+    orgaddr D'Costa Layout, Bangalore
+
+    <Model::DBIC>
+        schema_class    catares::Schema
+        connect_info    "dbi:mysql:catares"
+        connect_info    catares
+        connect_info    passw0rd
+        <connect_info>
+            AutoCommit  1
+        </connect_info>
+    </Model::DBIC>
+

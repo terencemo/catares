@@ -52,6 +52,15 @@ sub roomclasses :Chained('id') PathPart('roomclasses') {
     $c->stash->{process_file} = 'building/roomclasses.tt';
 }
 
+sub manage :Chained('/') PathPart('buildings/manage') {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    $c->stash->{buildings} = $conn->get_buildings();
+    $c->stash->{process_file} = 'building/manage.tt';
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
 =head1 AUTHOR
 
 Terence Monteiro,,,

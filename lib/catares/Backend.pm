@@ -17,19 +17,19 @@ sub new {
 }
 
 sub login {
-    my $self = shift;
-    my %args = @_;
+    my ( $self, $args ) = @_;
 
     my $schema = $self->{'schema'};
     my $rs = $schema->resultset('Users')->search( {
-        name => $args{'name'}
+        name => $args->{'name'}
     } );
     if (my $row = $rs->first) {
-        my $pcode = $args{passcode};
+        my $pcode = $args->{passcode};
         unless ($pcode) {
-            my $pass = $args{pass};
+            my $pass = $args->{pass};
             return unless $pass;
-            $pcode = sha1_hex($pass)
+            $pcode = sha1_hex($pass);
+            $args->{passcode} = $pcode;
         }
 
         if ($pcode eq $row->pass) {

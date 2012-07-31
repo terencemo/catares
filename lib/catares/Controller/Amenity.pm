@@ -1,7 +1,7 @@
 package catares::Controller::Amenity;
 use Moose;
 use namespace::autoclean;
-use YAML 'Dump';
+#use YAML 'Dump';
 
 BEGIN {extends 'Catalyst::Controller'; }
 
@@ -41,15 +41,15 @@ sub manage :Chained('/') PathPart('amenities/manage') {
             }
         }
         my $mcount = 0;
-        $c->log->debug("Amenities:", Dump($h));
         foreach my $aid (keys(%$h)) {
             my $args = {
                 id      => $aid,
                 rate    => $h->{$aid}->{rate},
                 map {
-                    $_ => $h->{$aid}->{$_} ? 1 : 0
-                } qw(for_hall for_room)
+                    $_ => ( $h->{$aid}->{$_} ? 1 : 0 )
+                } qw(for_hall for_room multiple)
             };
+#            $c->log->debug("Amenities:", Dump($args));
             eval {
                 ++$mcount if $conn->edit_amenity(%$args);
             };
@@ -86,6 +86,20 @@ sub add :Local {
     }
     $c->stash->{template} = 'amenity/row.tt';
     $c->stash->{amenity} = $amenity;
+}
+
+sub id : Chained('/') PathPart('amenity') CaptureArgs(1) {
+    my ( $self, $c, $am_id ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    $c->stash->{amenity} = $conn->get_amenity($am_id);
+}
+
+sub cost :Chained('id') PathPart('cost') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $am = $c->stash->{amenity};
+    $c->res->body($am->rate);
 }
 
 =head1 AUTHOR

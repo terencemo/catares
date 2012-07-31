@@ -1,0 +1,16 @@
+<div class="nav">
+    <ul class="menu">
+      <li><a href="[% c.uri_for('/') %]"><img src="[% c.uri_for('/static/images/home.png') %]" /> Home</a></li>
+      [%# CALL c.log.debug("Roles: " _ roles.join(', ')); %]
+      [% FOREACH role IN roles %] [%#conn.get_role_array() %]
+      [% menus = c.config.menu.item(role) %]
+      [% FOREACH item IN menus %]
+        <li[% ' class="curr"' IF (item.link.match('^/' _ c.req.path)) %]><a href="[% c.uri_for(item.link) %]">
+            [%- IF item.img -%]
+              <img src="[% c.uri_for(item.img) %]" alt="[% item.title %]" />
+            [%- END -%]
+          [% item.title %]</a></li>
+      [% END %]
+      [% END %]
+    </ul>
+</div>

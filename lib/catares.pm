@@ -2,6 +2,7 @@ package catares;
 use Moose;
 use namespace::autoclean;
 
+use Config::General;
 use Catalyst::Runtime 5.80;
 
 # Set flags and add plugins for the application
@@ -14,6 +15,7 @@ use Catalyst::Runtime 5.80;
 
 use Catalyst qw/
     -Debug
+
     ConfigLoader
     Session
     Session::Store::FastMmap
@@ -39,6 +41,31 @@ __PACKAGE__->config(
     name => 'catares',
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
+);
+
+my $aclconf = new Config::General(__PACKAGE__->config->{home} . "/acl.conf");
+my %conf = $aclconf->getall();
+foreach my $utype (keys(%conf)) {
+    my $uconf = $conf{$utype};
+    __PACKAGE__->config->{acl}->{$utype} = $uconf->{allow};
+}
+
+__PACKAGE__->config('Plugin::Authentication' =>
+    {
+        default_realm   => 'members',
+        members => {
+            credential  => {
+                class   => 'Password',
+                password_field  => 'pass',
+                password_type   => 'clear'
+            },
+            store   => {
+                class   => 'DBIx::Class',
+                user_model  => 'DBIC',
+                role_column => 'roles'
+            }
+        }
+    }
 );
 
 # Start the application

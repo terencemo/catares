@@ -1,0 +1,13 @@
+<form class="wufoo" action="login" method="POST">
+<ul>
+  <li>
+  <label for="username">Username: </label>
+  <input id="username" name="username">
+  </li><li>
+  <label for="password">Password: </label>
+  <input type="password" id="password" name="password">
+  </li><li class="buttons">
+  <input type="submit" value="Login">
+  <li>
+</ul>
+</form>

@@ -1,0 +1,110 @@
+<style>
+table {
+  width: 60%;
+}
+table tr td span.meal {
+  margin-left: 2em;
+}
+</style>
+<form id="bill" method="POST" action="[% c.uri_for('/book') %]">
+<header>
+<h2>Invoice #[% billing.id %]</h2>
+</header>
+<ul>
+<li>
+<label class="desc">Billing Name<span style="color:red">*</span>: </label>
+<span>
+<input type="text" class="text field large required" id="fullname" name="fullname" size="50" value="[% fullname %]">
+</span>
+</li>
+<li>
+<label class="desc">Phone/Mobile<span style="color:red">*</span>: </label>
+<span>
+<input type="text" class="text field required" id="phone" name="phone" size="50" value="[% phone %]">
+</span>
+</li>
+<li>
+<label class="desc">Address<span style="color:red">*</span>: </label>
+<span>
+<textarea class="text required" rows="5" name="address">[% address %]</textarea>
+<!--input type="text" class="text field required" id="fullname" name="fullname" size="50"-->
+</span>
+</li>
+<li>
+[%- billamt = 0 %]
+<table id="billing-table">
+<thead>
+  <tr>
+    <th class="descr first">Description</th>
+    <th class="rate" align="right">Rate (Rs)</th>
+    <th class="qty" align="center">Qty</th>
+    <th class="days" align="right">Days</th>
+    <th class="amt" align="right">Amount (Rs)</th>
+  </tr>
+</thead>
+<tbody>
+[% WHILE ( rb = roombookings.next ) %]
+<tr><td colspan="5" class="first">
+Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
+</tr><tr>
+<td class="first">Base rate</td>
+<td align="right">[% rb.room.roomclass.rate %]</td>
+<td colspan="2" align="right">[% rb.days %]</td>
+<td align="right">[% rb.room.roomclass.rate * rb.days %]</td>
+</tr>
+  [% mealbookings = rb.mealbookings %]
+  [% FOREACH mb IN mealbookings %]
+    <tr><td class="first">[% mb.meal.timeslot.name %] ([% mb.meal.type %])</td>
+      <td align="right">[% mb.meal.rate %]</td>
+      <td align="right">[% mb.count %]</td>
+      <td align="right">[% rb.days %]</td>
+    <td align="right">[% mb.cost %]</td></tr>
+  [% END %]
+  [% rabs = rb.roomamenitybookings %]
+  [% FOREACH rab IN rabs %]
+    <tr><td class="first">[% rab.amenity.name %]</td>
+    <td align="right">[% rab.amenity.rate %]</td>
+    <td align="right">[% rab.count %]</td>
+    <td align="right" colspan="2">[% rab.cost %]</td></tr>
+  [% END %]
+  <tr><td colspan="4" class="first">Room [% rb.room.number %] subtotal</td>
+  <td align="right">[% rb.amount; billamt = billamt + rb.amount %]</td></tr>
+<tr><td colspan="5" class="first">&nbsp;</td></tr>
+[% END %]
+[% FOREACH hb IN billing.hallbookings %]
+<tr><td colspan="5" class="billitem first">Hall: [% hb.halltimeslot.hall.name %] for
+  [% hb.halltimeslot.timeslot.name %] on [% hb.date.substr(0, 10) %]</td>
+</tr><tr>
+<td class="first">Base rate</td>
+<td align="right">[% hb.halltimeslot.rate %]</td>
+<td align="right" colspan="3">[% hb.halltimeslot.rate %]</td>
+</tr>
+  [% mb = hb.mealbooking %]
+  [%# FOREACH mb IN mealbookings %]
+    <tr><td class="first">[% mb.meal.timeslot.name %] ([% mb.meal.type %])</td>
+    <td align="right">[% mb.meal.rate %]</td>
+    <td align="right">[% mb.count %]</td>
+    <td colspan="2" align="right">[% mb.cost %]</td></tr>
+  [%# END %]
+  [% habs = hb.hallamenitybookings %]
+  [% FOREACH hab IN habs %]
+    <tr><td class="first">[% hab.amenity.name %]</td>
+    <td align="right">[% hab.amenity.rate %]</td>
+    <td align="right">[% hab.count %]</td>
+    <td align="right" colspan="2">[% hab.cost %]</td></tr>
+  [% END %]
+  <tr><td colspan="4" class="first">Hall [% hb.hall.name %] subtotal</td>
+  <td align="right">[% hb.amount; billamt = billamt + hb.amount %]</td></tr>
+[% END %]
+<tr><td colspan="4" class="first">Total Amount</td>
+<td align="right">[% billamt %]</td></tr>
+</tbody>
+</table>
+
+</li>
+
+  <li class="buttons">
+    <input type="submit" value="Generate Invoice">
+  </li>
+
+</form>

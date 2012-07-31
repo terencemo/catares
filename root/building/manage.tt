@@ -1,0 +1,34 @@
+<style>
+form {
+  width: 50%;
+}
+li.likert {
+}
+</style>
+
+<form class="wufoo">
+
+<header class="info">
+<h2>Buildings</h2>
+<div>Manage buildings</div>
+</header>
+
+<ul>
+<li class="likert">
+<table cellspacing="0">
+<tbody>
+[% i = 0 %]
+[% WHILE (building = buildings.next) %]
+<tr [% 'class="alt"' IF i % 2 %]>
+  <th>[% building.name %]</th>
+  <td><a href="[% c.uri_for('/building' building.id 'halls') %]">Halls</a></td>
+  <td><a href="[% c.uri_for('/building' building.id 'roomclasses') %]">Room Classes</a></td>
+</tr>
+[% i = i + 1 %]
+[% END %]
+</tbody>
+</table>
+</li>
+
+</ul>
+</form>

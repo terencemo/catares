@@ -1,0 +1,16 @@
+[% USE date %]
+<form class="wufoo" method="GET" action="[% c.uri_for('/reports/collections') %]">
+<header id="header" class="info">
+<h2>Collections</h2>
+<div>Collection from Hall/Room bookings</div>
+</header>
+<ul>
+[% WHILE (user = users.next) %]
+  [% NEXT UNLESS user.billings %]
+  <li><a href="[% c.uri_for('/user' user.id 'billings') %]">[% user.name %]</a>
+  </li>
+[% END %]
+<li id="billings">
+</li>
+</ul>
+</form>

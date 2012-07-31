@@ -32,13 +32,33 @@ footer, header, nav, section, video, object, output {
 }
 #container, #bottom{
 	margin:0 auto;
-	width:640px;
+	width:660px;
+}
+#content {
+    width: 99%;
+/*    position: relative;*/
+}
+#central {
+/*    position: absolute;
+    left: 3px;
+    min-height: 300px;*/
+    float: left;
+    width: 480px;
+}
+#right {
+/*    position: absolute;
+    left: 500px;*/
+    float: left;
+    width: 160px;
 }
 #bottom{
 	width:650px;
 	height:10px !important;
 	margin-bottom:10px;
 	display:block !important;
+}
+table.footer {
+    clear: both;
 }
 
 form.wufoo{

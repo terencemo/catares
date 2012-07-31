@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::MySQL
--- Created on Thu Nov 10 20:07:32 2011
+-- Created on Thu Dec  1 20:28:53 2011
 -- 
 SET foreign_key_checks=0;
 
@@ -73,11 +73,11 @@ DROP TABLE IF EXISTS `billings`;
 CREATE TABLE `billings` (
   `id` integer NOT NULL auto_increment,
   `booked_by` integer NOT NULL,
-  `created` datetime NOT NULL,
-  `charges` double NOT NULL,
-  `discount` double NOT NULL,
-  `total` double NOT NULL,
-  `deposit` double NOT NULL,
+  `created` datetime,
+  `charges` double,
+  `discount` double,
+  `total` double,
+  `deposit` double,
   INDEX `billings_idx_booked_by` (`booked_by`),
   PRIMARY KEY (`id`),
   CONSTRAINT `billings_fk_booked_by` FOREIGN KEY (`booked_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -223,7 +223,7 @@ DROP TABLE IF EXISTS `hallbookings`;
 CREATE TABLE `hallbookings` (
   `id` integer NOT NULL auto_increment,
   `halltimeslot_id` integer NOT NULL,
-  `date` datetime NOT NULL,
+  `date`  NOT NULL,
   `billing_id` integer NOT NULL,
   `amount` double NOT NULL,
   `checkedout` tinyint NOT NULL,

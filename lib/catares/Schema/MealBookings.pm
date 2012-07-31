@@ -11,6 +11,10 @@ __PACKAGE__->add_columns(
                         meal_id => {
                             data_type => 'integer'
                         },
+                        booked_for => {
+                            data_type   => 'varchar',
+                            size        => 10
+                        },
                         booking_id => {
                             data_type => 'integer',
                             is_nullable => 1,

@@ -20,6 +20,9 @@ __PACKAGE__->add_columns(
                         checkout => {
                             data_type => 'datetime'
                         },
+                        days    => {
+                            data_type => 'integer'
+                        },
                         amount => {
                             data_type => 'double'
                         },
@@ -32,6 +35,14 @@ __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to(billing => 'catares::Schema::Billings', 'billing_id');
 __PACKAGE__->belongs_to(room => 'catares::Schema::Rooms', 'room_id');
 __PACKAGE__->has_many(roomamenitybookings => 'catares::Schema::RoomAmenityBookings', 'roombooking_id');
-__PACKAGE__->has_one(mealbooking => 'catares::Schema::MealBookings', 'booking_id');
+__PACKAGE__->has_many(allmealbookings => 'catares::Schema::MealBookings', 'booking_id');
+
+sub mealbookings {
+    my $self = shift;
+
+    $self->search_related('allmealbookings', {
+        booked_for  => 'Room'
+    } );
+}
 
 1;

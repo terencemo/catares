@@ -1,0 +1,8 @@
+$(document).ready(function() {
+  $('form.wufoo ul li a').click(function(e) {
+    $.get($(this).attr('href'), function(data) {
+      $('#billings').html(data);
+    } );
+    return false;
+  } );
+} );

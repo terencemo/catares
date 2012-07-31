@@ -1122,3 +1122,7 @@ form li.complex p.error{
 .rtl #errorLi *{
 	text-align:center;
 }
+#right h2 {
+	font-weight:normal;
+	font-size:160%;
+}

@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::PostgreSQL
--- Created on Thu Nov 10 20:07:32 2011
+-- Created on Thu Dec  1 20:28:54 2011
 -- 
 --
 -- Table: amenities
@@ -52,7 +52,7 @@ DROP TABLE "users" CASCADE;
 CREATE TABLE "users" (
   "id" serial NOT NULL,
   "name" character varying(50) NOT NULL,
-  "pass" 50 NOT NULL,
+  "pass" character varying(50) NOT NULL,
   "lastlogin" timestamp NOT NULL,
   "fullname" character varying(255) NOT NULL,
   PRIMARY KEY ("id")
@@ -65,11 +65,11 @@ DROP TABLE "billings" CASCADE;
 CREATE TABLE "billings" (
   "id" serial NOT NULL,
   "booked_by" integer NOT NULL,
-  "created" timestamp NOT NULL,
-  "charges" numeric NOT NULL,
-  "discount" numeric NOT NULL,
-  "total" numeric NOT NULL,
-  "deposit" numeric NOT NULL,
+  "created" timestamp,
+  "charges" numeric,
+  "discount" numeric,
+  "total" numeric,
+  "deposit" numeric,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "billings_idx_booked_by" on "billings" ("booked_by");

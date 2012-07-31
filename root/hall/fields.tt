@@ -29,9 +29,9 @@
 </li>
 
 <li class="leftHalf">
-  <label class="desc">Date(s)</label>
+  <label class="desc">Date</label>
   <span>
-    <input id="hall-date" type="text" class="field text medium" size="10">
+    <input id="hall-date" name="date" type="text" class="field text medium" size="10" readonly>
     <img id="dtPicker" src="[% c.uri_for('/static/images/cal4.jpg') %]">
   </span>
 </li>
@@ -39,7 +39,7 @@
 <li class="rightHalf">
   <label class="desc">Time</label>
   <span>
-    <select class="field select">
+    <select class="field select" name="timeslot">
       <option> --- Select one --- </option>
       [% WHILE (ts = timeslots.next) %]
         <option value="[% ts.id %]">[% ts.name %]</option>

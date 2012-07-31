@@ -42,21 +42,53 @@ sub auto : Private {
 #        $c->stash->{process_file} = 'login.tt';
 #        $c->detach('/login');
 #        return 0;
-        $c->session->{name} = 'admin';
-        $c->session->{passcode} = 'd033e22ae348aeb5660fc2140aec35850c4da997';
+#        $c->session->{name} = 'admin';
+#        $c->session->{passcode} = 'd033e22ae348aeb5660fc2140aec35850c4da997';
+        $c->session->{path} = $c->req->path;
+        $c->forward('/login/index');
+        $c->res->redirect($c->uri_for('/login'));
+        return 0;
     }
 
-    if ('POST' eq $c->req->method and 'login' eq $c->req->path) {
-        return 1;
+    return 1 if $c->req->action =~ m/^(login|logout)$/;
+
+    my ( $conn, $roles );
+    if (my $conn = $c->model('Adaptor')->login( {
+            name => $c->session->{name},
+            passcode => $c->session->{passcode} } ) ) {
+
+        my $roles = $conn->get_role_array();
+        $c->stash->{roles} = $roles;
+
+        $c->stash->{Connection} = $conn;
+
+#        $c->log->debug("Roles: " . join(",",@$roles));
+
+        foreach my $role (@$roles) {
+#            $c->log->debug("Actions for $role: " . join(", ", @{ $c->config->{acl}->{$role} }));
+            if (grep { $c->req->action eq $_ }
+                    @{ $c->config->{acl}->{$role} } ) {
+                return 1;
+            }
+        }
     }
 
-    my $conn = $c->model('DBIC')->login(
-        name => $c->session->{name},
-        passcode => $c->session->{passcode} );
+#    my $auth = $c->authenticate( {
+#        username    => $c->session->{name},
+#        password    => $c->session->{passcode}
+#    } );
 
-    $c->stash->{Connection} = $conn;
+#    $c->log->debug("Auth result: $auth");
 
-    return 1;
+    $c->log->debug("ACL violation. Action: " . $c->req->action);
+    $c->forward('/access_violation');
+    return 0;
+}
+
+sub access_violation : Local {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{'process_file'} = 'access-violation.tt';
 }
 
 =head2 default
@@ -120,6 +152,12 @@ sub end : ActionClass('RenderView') {
     my $script = "static/js/$file";
     if ( -f $static_dir->file($script) ) {
         $c->stash->{script} = $script;
+    }
+
+    if (my $bid = $c->session->{billing}) {
+        my $conn = $c->stash->{Connection};
+        my $billing = $conn->get_billing($bid);
+        $c->stash->{billing} = $billing;
     }
 
     $c->forward($c->view("TT"));

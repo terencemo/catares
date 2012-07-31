@@ -1,4 +1,4 @@
-<form class="wufoo page" style="width: 450px">
+<form id="search_form" class="wufoo page" style="width: 450px" method="POST">
 <header id="header" class="info">
 <h2>Availability Search</h2>
 <div>Search for halls / rooms</div>

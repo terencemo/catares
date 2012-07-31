@@ -1,0 +1,47 @@
+[% USE date %]
+<form class="wufoo" method="GET" action="[% c.uri_for('/reports/days_meals') %]">
+<header id="header" class="info">
+<h2>Daily Meals Report</h2>
+<div>Meal requirements for date</div>
+</header>
+<ul>
+  <li>
+    <label class="desc">Date: </label>
+    <input name="date" id="date" class="small" value="[% c.stash.date %]">
+    <img src="[% c.uri_for('/static/images/cal4.jpg') %]" id="pick_date">
+    <input type="submit">
+  </li>
+[% IF mealcounts %]
+<li>
+<table class="mc-table">
+<thead>
+<tr>
+  <th rowspan="2">Meal</th>
+  <th colspan="2">for Halls</th>
+  <th colspan="2">for Rooms</th>
+</tr>
+<tr>
+  <th>Veg</th>
+  <th>Non-veg</th>
+  <th>Veg</th>
+  <th>Non-veg</th>
+<tr>
+</thead>
+<tbody>
+[% WHILE (ts = timeslots.next) %]
+  [% ts_id = ts.id %]
+  <tr>
+    <td>[% ts.name; mc = mealcounts.$ts_id %]</td>
+    <td>[% mc.veg || 0 %]</td>
+    <td>[% mc.nonveg || 0;
+      rmc = roommealcounts.$ts_id %]</td>
+    <td>[% rmc.veg || 0 %]</td>
+    <td>[% rmc.nonveg || 0 %]</td>
+  </tr>
+[% END %]
+</tbody>
+</table>
+  </li>
+[% END %]
+</ul>
+</form>

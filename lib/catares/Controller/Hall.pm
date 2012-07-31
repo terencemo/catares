@@ -38,6 +38,23 @@ sub fields :Local {
     $c->stash->{template} = 'hall/fields.tt';
 }
 
+sub search :Local {
+    my ( $self, $c ) = @_;
+
+    return unless ('POST' eq $c->req->method());
+
+    my $conn = $c->stash->{Connection};
+    my %parms = map {
+        $_ => $c->req->params->{$_}
+    } grep {
+        $c->req->params->{$_}
+    } qw(hall date timeslot);
+    $c->stash->{halls} = $conn->search_halls(%parms);
+    $c->stash->{amenities} = $conn->get_amenities();
+    $c->stash->{includes} = [ 'wufoo' ];
+    $c->stash->{process_file} = 'hall/search-results.tt';
+}
+
 sub add :Local {
     my ( $self, $c ) = @_;
 
@@ -69,6 +86,26 @@ sub id : Chained('/') PathPart('hall') CaptureArgs(1) {
 
     my $conn = $c->stash->{Connection};
     $c->stash->{hall} = $conn->get_hall($hall_id);
+}
+
+sub cost :Chained('id') PathPart('cost') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    my $hall = $c->stash->{hall};
+    my $timeslot = $c->req->params->{timeslot};
+    my $hts = $conn->get_hall_timeslot(
+        hall        => $hall->id,
+        timeslot    => $timeslot
+    );
+    my $cost = $hts->rate;
+    my $meal = $conn->get_meal(
+        type        => $c->req->params->{type},
+        timeslot    => $timeslot
+    );
+    my $qty = $c->req->params->{qty};
+    $cost += $meal->rate * $qty;
+    $c->res->body($cost);
 }
 
 sub edit :Chained('id') PathPart('edit') Args(0) {
@@ -144,6 +181,66 @@ sub rates :Chained('id') PathPart('rates') Args(0) {
 sub delete :Chained('id') PathPart('delete') Args(0) {
     my ( $self, $c ) = @_;
 
+}
+
+sub book :Local {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    my $billing = $c->session->{billing};
+
+    my $hid = $c->req->params->{hall};
+    $c->log->debug("Hall $hid selected");
+    my %hall_args = map {
+        $_ => $c->req->params->{$_}
+    } qw(hall timeslot date);
+    $hall_args{billing} = $billing if $billing;
+
+    my $hall_bkg = $conn->book_hall(%hall_args);
+    my $hallcost = $hall_bkg->halltimeslot->rate;
+    $billing = $hall_bkg->billing_id;
+
+    my $pref = "h_${hid}_";
+    if ($c->req->params->{$pref . "meal"}) {
+        my ( $type, $qty ) = map {
+            $c->req->params->{$pref . $_}
+        } qw(pref qty);
+        my $meal_bkg = $conn->book_meal(
+            timeslot    => $hall_args{timeslot},
+            type        => $type,
+            booked_for  => 'Hall',
+            booking_id  => $hall_bkg->id,
+            count       => $qty,
+            days        => 1
+        );
+        $hallcost += $meal_bkg->cost;
+    }
+
+    foreach my $akey (grep { m/^am_\d+$/ } %{$c->req->params} ) {
+        my ( $aid ) = $akey =~ m/^am_(\d+)$/;
+        my $count = $c->req->params->{$akey};
+        my $am_bkg = $conn->book_hall_amenity(
+            booking => $hall_bkg->id,
+            amenity => $aid,
+            count   => $count
+        );
+        $hallcost += $am_bkg->cost;
+    }
+
+    $conn->edit_hall_booking(
+        hall_booking    => $hall_bkg,
+        amount          => $hallcost
+    );
+
+    $c->session->{billing} = $billing if $billing;
+
+    $c->stash->{template} = 'blank.tt';
+    if ('bill' eq $c->req->params->{form_action}) {
+        $c->stash->{billing} = $conn->get_billing($billing);
+        $c->res->redirect($c->uri_for('/book'));
+    } else {
+        $c->res->redirect($c->uri_for('/'));
+    }
 }
 
 =head1 AUTHOR

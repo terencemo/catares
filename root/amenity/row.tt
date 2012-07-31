@@ -2,5 +2,6 @@
   <td>[% amenity.name %]</td>
   <td><input type="checkbox" id="am_[% amenity.id %]_for_hall" name="am_[% amenity.id %]_for_hall"[% ' checked' IF amenity.for_hall %]></td>
   <td><input type="checkbox" id="am_[% amenity.id %]_for_room" name="am_[% amenity.id %]_for_room"[% ' checked' IF amenity.for_room %]></td>
+  <td><input type="checkbox" id="am_[% amenity.id %]_multiple" name="am_[% amenity.id %]_multiple"[% ' checked' IF amenity.multiple %]></td>
   <td><input type="text" name="am_[% amenity.id %]_rate" size="8" value="[% amenity.rate %]"></td>
 </tr>

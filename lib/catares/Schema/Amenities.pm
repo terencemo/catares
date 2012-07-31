@@ -18,6 +18,9 @@ __PACKAGE__->add_columns(
                         for_room => {
                             data_type => 'bit'
                         },
+                        multiple => {
+                            data_type => 'bit'
+                        },
                         rate => {
                             data_type => 'double'
                         }

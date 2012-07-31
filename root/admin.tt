@@ -1,0 +1,18 @@
+<form class="wufoo">
+
+<header id="header" class="info">
+  <h2>Administer</h2>
+  <div>Administrative settings</div>
+</header>
+
+<ul>
+<li>
+  <span><a href="[% c.uri_for('/amenities/manage') %]">Manage Amenities</a></span>
+</li>
+
+<li>
+  <span><a href="[% c.uri_for('/meals/manage') %]">Manage Meals</a></span>
+</li>
+
+</ul>
+</form>

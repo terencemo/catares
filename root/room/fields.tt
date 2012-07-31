@@ -1,28 +1,65 @@
+<style>
+#checkin-date,
+#checkout-date {
+  float:left;
+  display:inline;
+  width:110px !important;
+}
+img.date {
+  float:left;
+  padding:3px;
+}
+</style>
+
 <li class="leftHalf">
   <label class="desc">Room class</label>
   <span>
-    <select class="field select">
+  [% IF (roomclasses.count == 1) %]
+    [% rc = roomclasses.first %]
+    <span>[% rc.name %]</span>
+    <input type="hidden" id="roomclass" name="roomclass" value="[% rc.id %]">
+  [% ELSE %]
+    <select id="roomclass" name="roomclass" class="field select">
       <option> --- Select one --- </option>
+      [% WHILE (rc = roomclasses.next) %]
+      <option value="[% rc.id %]">[% rc.name %]</option>
+      [% END %]
     </select>
+  [% END %]
   </span>
 </li>
 
 <li class="rightHalf">
   <label class="desc">No. of rooms</label>
   <span>
-    <input class="field text medium" type="text" id="number" name="number">
+    <input class="field text medium" type="text" id="number" name="number" size="4">
   </span>
 </li>
 
 <li class="leftHalf">
-  <label class="desc">Date(s)</label>
+  <label class="desc">Check-in date</label>
   <span>
-    <input type="text" class="field text medium" size="10">
+    <input id="checkin-date" type="text" name="checkin_date" class="date field text medium" size="10">
+    <img id="dtCheckinPicker" class="date" src="[% c.uri_for('/static/images/cal4.jpg') %]">
   </span>
 </li>
 
 <li class="rightHalf">
-  <label class="desc">Check-in time</label>
-  [% INCLUDE 'html/time-select.tt' %]
+  <label class="desc">Time</label>
+  [% INCLUDE 'html/time-select.tt' prefix = 'checkin' %]
+</li>
 
+<li class="leftHalf">
+  <label class="desc">Check-out date</label>
+  <span>
+    <input id="checkout-date" type="text" name="checkout_date" class="date field text medium" size="8">
+    <img id="dtCheckoutPicker" class="date" src="[% c.uri_for('/static/images/cal4.jpg') %]">
+  </span>
+</li>
+
+<li class="rightHalf">
+  <label class="desc">Time</label>
+  <span>
+    <input id="checkout_time" name="checkout_time" class="field medium text" size="4" readonly>
+  </span>
 </li>

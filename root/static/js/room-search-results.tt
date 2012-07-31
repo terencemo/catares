@@ -1,0 +1,110 @@
+var sel = 0;
+
+function reval_cost(rid) {
+  var parms = new Object;
+  $('tr.rm_' + rid + ' input.time').each(function(i,e) {
+    if ($(e).attr('checked')) {
+      parms['meal_' + $(e).attr('value')] = 1;
+    }
+  } );
+  parms['qty'] = $('tr.rm_' + rid + ' input.qty').val();
+  $('tr.rm_' + rid + ' input.pref').each(function(i,e) {
+    if ($(e).attr('checked')) {
+      parms['type'] = $(e).attr('value');
+    }
+  } );
+  $.get("[% c.uri_for('/room/') %]" + rid + '/cost', parms, function(data) {
+    $('tr.rm_' + rid + ' td.cost').html(data);
+    $('#rm_' + rid + '_cost').val(data);
+    if (sel == [% req %]) {
+      reval_total_cost();
+      $('input.roomcost').change(function() {
+        reval_total_cost();
+      } );
+      $('input.amen').change(function() {
+        reval_total_cost();
+      } );
+    }
+  } );
+}
+
+function reval_total_cost() {
+  var dailyCost = 0;
+  var rooms = 0;
+  $('input.roomcost').each(function(i, e) {
+//    alert('Room cost for ' + $(e).attr('id') + ' = ' + $(e).val());
+    if ($(e).val()) { 
+      dailyCost += $(e).val()/1;
+      ++rooms;
+    }
+  } );
+  var acost = 0;
+  $('input.amen').each(function(i, e) {
+    var num = 1;
+    if ('checkbox' == $(e).attr('type')) {
+      if ($(e).attr('checked') == false) {
+        return;
+      }
+    } else {
+      num = $(e).val();
+      if (num == 0) {
+        return;
+      }
+    }
+    var name = $(e).attr('name');
+    acost += $('#' + name + '_cost').val() * num * [% req %];
+  } );
+  var cost = dailyCost * [% days %] + acost;
+  var html = 'Total estimated cost = ' + cost;
+
+  $('#est-total').html(html);
+  $('#est-tot').val(cost);
+}
+
+$(document).ready(function() {
+  $('input.rmchk').change(function() {
+    if ($(this).attr('checked')) {
+      if (sel == [% req %]) {
+        alert("You have already selected [% req %] rooms");
+        $(this).attr('checked', false);
+        return false;
+      }
+      ++sel;
+      var rid = this.value;
+      $('tr.rm_' + rid + ' input.meal').attr('disabled', false);
+      $('tr.rm_' + rid + ' input.time').attr('checked', true);
+      $('tr.rm_' + rid + ' input.pref').each(function(i, e) {
+        if ('veg' == e.value) {
+          $(e).attr('checked', true);
+        }
+      } );
+      rid = this.value;
+      reval_cost(rid);
+      $('tr.rm_' + rid + ' input.meal').change(function() {
+        reval_cost(rid);
+      } );
+    } else {
+      --sel;
+      var rid = this.value;
+      $('tr.rm_' + rid + ' input.meal').attr('disabled', true);
+      $('tr.rm_' + rid + ' input.time').attr('checked', false);
+      $('tr.rm_' + rid + ' input.pref').attr('checked', false);
+      $('tr.rm_' + rid + ' td.cost').html('');
+    }
+    if (sel > 0) {
+      $('#rm_sel').html(sel + ' out of [% short ? found : req %] rooms selected');
+    } else {
+      $('#rm_sel').html('Kindly select [% short ? found : req %] rooms');
+    }
+  } );
+  $('li.submit input.button').click(function() {
+    $('input.rmchk:checked').each(function(i, e) {
+      reval_cost(e.value);
+    } );
+    reval_total_cost();
+    if ($(this).hasClass('bill')) {
+      $('#form_action').val('bill');
+    }
+    $('#room_booking').submit();
+  } );
+} );

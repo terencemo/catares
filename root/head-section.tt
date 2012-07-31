@@ -4,6 +4,7 @@
   <title>[% title || 'Catares' %]</title>
   <style>
     @import url("[% c.uri_for('/static/css/default.css') %]");
+    @import url("[% c.uri_for('/static/css/menu.css') %]");
     [%- FOREACH sheet IN styles %]
     @import url("[% c.uri_for(sheet) %]");
     [%- END -%]
@@ -14,6 +15,7 @@
   <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.js') %]"></script>  
   <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.json-2.2.min.js') %]"></script>
   <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.validate.js') %]"></script>
+  <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.printElement.js') %]"></script>
 
 </head>
 <body id="public">

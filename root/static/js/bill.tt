@@ -1,0 +1,31 @@
+$(document).ready(function() {
+    $('#bill').submit(function(e) {
+        $('#bill').printElement( {
+            overrideElementCSS: [
+                "[% ss = c.uri_for('/static/css/bill.css'); ss %]",
+                {
+                  href: "[% ss %]",
+                  media: "print"
+                },
+                "[% ss = c.uri_for('/static/css/form.css'); ss %]",
+                {
+                  href: "[% ss %]",
+                  media: "print"
+                },
+                "[% ss = c.uri_for('/static/css/theme.css'); ss %]",
+                {
+                  href: "[% ss %]",
+                  media: "print"
+                },
+            ]
+        } );
+        return true;
+    } );
+    $('#discount').change(function(e) {
+        $('#discamt').val($('#discount').val() * $('#charges').val() / 100);
+        $('#total').val($('#charges').val() - $('#discamt').val());
+        $('#deposit').val($('#total').val() * 0.25);
+        $('#payable').val(parseFloat($('#total').val()) +
+            parseFloat($('#deposit').val()));
+    } );
+} );
