@@ -68,6 +68,13 @@ __PACKAGE__->config('Plugin::Authentication' =>
     }
 );
 
+__PACKAGE__->config('Model::Adaptor' => {
+    class   => 'catares::Backend',
+    args    => {
+        connect_info => __PACKAGE__->config->{'Model::DBIC'}->{connect_info}
+    }
+} );
+
 # Start the application
 __PACKAGE__->setup();
 
