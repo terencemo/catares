@@ -54,6 +54,42 @@ sub hall_bookings :Local {
     $c->stash->{includes} = [ 'wufoo', 'calendar' ];
 }
 
+sub room_bookings :Local {
+    my ( $self, $c ) = @_;
+
+    if (my $date = $c->req->params->{date}) {
+        my $conn = $c->stash->{Connection};
+        $c->stash->{rbs} = $conn->get_room_bookings($date);
+        $c->stash->{date} = $date;
+    }
+    $c->stash->{process_file} = 'reports/room-bookings.tt';
+    $c->stash->{includes} = [ 'wufoo', 'calendar' ];
+}
+
+sub all_bookings :Local {
+    my ( $self, $c ) = @_;
+    $c->stash->{process_file} = 'reports/all-bookings.tt';
+    $c->stash->{includes} = [ 'wufoo', 'calendar' ];
+}
+
+sub daily_hall_bookings :Local {
+    my ( $self, $c ) = @_;
+
+    my $date = $c->req->params->{date};
+    my $conn = $c->stash->{Connection};
+    $c->stash->{hbs} = $conn->get_hall_bookings($date);
+    $c->stash->{template} = 'reports/daily-hall-bookings.tt';
+}
+
+sub daily_room_bookings :Local {
+    my ( $self, $c ) = @_;
+
+    my $date = $c->req->params->{date};
+    my $conn = $c->stash->{Connection};
+    $c->stash->{rbs} = $conn->get_room_bookings($date);
+    $c->stash->{template} = 'reports/daily-room-bookings.tt';
+}
+
 sub collections :Local {
     my ( $self, $c ) = @_;
 

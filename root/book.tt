@@ -79,13 +79,13 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
 <td align="right">[% hb.halltimeslot.rate %]</td>
 <td align="right" colspan="3">[% hb.halltimeslot.rate %]</td>
 </tr>
-  [% mb = hb.mealbooking %]
-  [%# FOREACH mb IN mealbookings %]
+  [% mbs = hb.meal_bookings %]
+  [% WHILE (mb = mbs.next) %]
     <tr><td class="first">[% mb.meal.timeslot.name %] ([% mb.meal.type %])</td>
     <td align="right">[% mb.meal.rate %]</td>
     <td align="right">[% mb.count %]</td>
     <td colspan="2" align="right">[% mb.cost %]</td></tr>
-  [%# END %]
+  [% END %]
   [% habs = hb.hallamenitybookings %]
   [% FOREACH hab IN habs %]
     <tr><td class="first">[% hab.amenity.name %]</td>

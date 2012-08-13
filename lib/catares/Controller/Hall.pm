@@ -99,12 +99,16 @@ sub cost :Chained('id') PathPart('cost') Args(0) {
         timeslot    => $timeslot
     );
     my $cost = $hts->rate;
-    my $meal = $conn->get_meal(
-        type        => $c->req->params->{type},
-        timeslot    => $timeslot
-    );
-    my $qty = $c->req->params->{qty};
-    $cost += $meal->rate * $qty;
+    foreach my $type (qw(veg nonveg)) {
+        my $qty = $c->req->params->{$type};
+        if ($qty > 0) {
+            my $meal = $conn->get_meal(
+                type        => $type,
+                timeslot    => $timeslot
+            );
+            $cost += $meal->rate * $qty;
+        }
+    }
     $c->res->body($cost);
 }
 
@@ -200,20 +204,22 @@ sub book :Local {
     my $hallcost = $hall_bkg->halltimeslot->rate;
     $billing = $hall_bkg->billing_id;
 
-    my $pref = "h_${hid}_";
-    if ($c->req->params->{$pref . "meal"}) {
-        my ( $type, $qty ) = map {
-            $c->req->params->{$pref . $_}
-        } qw(pref qty);
-        my $meal_bkg = $conn->book_meal(
-            timeslot    => $hall_args{timeslot},
-            type        => $type,
-            booked_for  => 'Hall',
-            booking_id  => $hall_bkg->id,
-            count       => $qty,
-            days        => 1
-        );
-        $hallcost += $meal_bkg->cost;
+    my $pre = "h_${hid}_";
+    if ($c->req->params->{$pre . "meal"}) {
+        $pre .= "qty_";
+        foreach my $type (qw(veg nonveg)) {
+            my $qty = $c->req->params->{$pre . $type};
+            $c->log->debug("Booking $qty $type meals for hall");
+            my $meal_bkg = $conn->book_meal(
+                timeslot    => $hall_args{timeslot},
+                type        => $type,
+                booked_for  => 'Hall',
+                booking_id  => $hall_bkg->id,
+                count       => $qty,
+                days        => 1
+            );
+            $hallcost += $meal_bkg->cost;
+        }
     }
 
     foreach my $akey (grep { m/^am_\d+$/ } %{$c->req->params} ) {

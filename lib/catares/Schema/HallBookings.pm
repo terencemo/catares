@@ -41,4 +41,12 @@ sub mealbooking {
     return $rs->first;
 }
 
+sub meal_bookings {
+    my $self = shift;
+
+    my $rs = $self->search_related('mealbookings', {
+        booked_for  => 'Hall'
+    } );
+}
+
 1;

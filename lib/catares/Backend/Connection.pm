@@ -405,7 +405,6 @@ sub search_halls {
         'halltimeslot.timeslot_id'  => $args{timeslot},
         date                        => $args{date}
     };
-    $search_args->{'halltimeslot.hall_id'} = $args{hall} if $args{hall};
     my $bkgs = $self->schema->resultset('HallBookings')->search($search_args, {
         join    => [ 'halltimeslot' ],
         select  => [ 'halltimeslot.hall_id' ],
@@ -418,9 +417,19 @@ sub search_halls {
         push(@$booked_hids, $bkg->get_column('hall_id'));
     }
 
-    $self->schema->resultset('Halls')->search( {
+    $search_args = {
         id  => { '-not_in'  => $booked_hids }
-    } );
+    };
+
+    if ($args{hall}) {
+        $search_args = {
+            -and    => [ %$search_args,
+                id  => $args{hall}
+            ]
+        };
+    }
+
+    $self->schema->resultset('Halls')->search($search_args);
 }
 
 sub search_rooms {
@@ -794,6 +803,15 @@ sub get_hall_bookings {
     }, {
         join    => { halltimeslot => 'timeslot' },
         order_by    => 'timeslot.id'
+    } );
+}
+
+sub get_room_bookings {
+    my ( $self, $date ) = @_;
+
+    $self->schema->resultset('RoomBookings')->search( {
+        checkin => { '<='   => "$date 23:59:59" },
+        checkout => { '>='  => "$date 00:00:00" }
     } );
 }
 

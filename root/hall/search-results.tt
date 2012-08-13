@@ -36,8 +36,7 @@ li.likert table th {
   <tr>
     <th rowspan="2">Hall</th>
     <th rowspan="2">Need food?</th>
-    <th colspan="2">Preference</th>
-    <th rowspan="2">Qty</th>
+    <th colspan="2">Quantity</th>
     <th rowspan="2">Cost</th>
   </tr>
   <tr>
@@ -54,9 +53,9 @@ li.likert table th {
       <label class="choice" for="h_[% hall.id %]_meal">Yes</label></td>
       </td>
       [% FOREACH type IN [ 'veg', 'nonveg' ] %]
-        <td><input type="radio" class="meal pref" id="h_[% hall.id %]_pref_[% type %]" name="h_[% hall.id %]_pref" value="[% type %]" disabled></td>
+        <td><input type="text" class="meal qty text" id="h_[% hall.id %]_qty_[% type %]"
+          name="h_[% hall.id %]_qty_[% type %]" size="2" disabled></td>
       [% END %]
-      <td><input type="text" class="meal qty text" id="h_[% hall.id %]_qty" name="h_[% hall.id %]_qty" size="2" disabled></td>
       <td class="cost"></td>
       <input type="hidden" class="hallcost" id="h_[% hall.id %]_cost" name="h_[% hall.id %]_cost">
     </tr>

@@ -1,11 +1,13 @@
 function reval_cost(hid) {
   var parms = new Object;
-  parms['qty'] = $('tr.h_' + hid + ' input.qty').val();
-  $('tr.h_' + hid + ' input.pref').each(function(i,e) {
-    if ($(e).attr('checked')) {
-      parms['type'] = $(e).attr('value');
+  var types = new Array('veg', 'nonveg');
+  for(var i = 0; i < 2; ++i) { // >
+    var type = types[i];
+    var qty = $('#h_' + hid + '_qty_' + type).val();
+    if (qty > 0) {
+      parms[type] = qty;
     }
-  } );
+  }
   parms['timeslot'] = $('#timeslot').val();
   $.get("[% c.uri_for('/hall/') %]" + hid + '/cost', parms, function(data) {
     $('tr.h_' + hid + ' td.cost').html(data);
@@ -49,16 +51,20 @@ function reval_total_cost() {
 }
 
 $(document).ready(function() {
+  $('input.mchk').change(function() {
+    var hidc = $(this).parent().parent().attr('class');
+    if ($(this).attr('checked')) {
+      $('tr.' + hidc + ' input.qty').val(0);
+    } else {
+      $('tr.' + hidc + ' input.qty').val('');
+    }
+  } );
   $('input.hrad').change(function() {
     if ($(this).attr('checked')) {
       var hid = this.value;
       $('tr.h_' + hid + ' input.meal').attr('disabled', false);
       $('tr.h_' + hid + ' input.mchk').attr('checked', true);
-      $('tr.h_' + hid + ' input.pref').each(function(i, e) {
-        if ('veg' == e.value) {
-          $(e).attr('checked', true);
-        }
-      } );
+      $('tr.h_' + hid + ' input.qty').val(0);
       reval_cost(hid);
       $('tr.h_' + hid + ' input.meal').change(function() {
         reval_cost(hid);
@@ -67,7 +73,6 @@ $(document).ready(function() {
       var hid = this.value;
       $('tr.h_' + hid + ' input.meal').attr('disabled', true);
       $('tr.h_' + hid + ' input.mchk').attr('checked', false);
-      $('tr.h_' + hid + ' input.pref').attr('checked', false);
       $('tr.h_' + hid + ' input.qty').val('');
       $('tr.h_' + hid + ' td.cost').html('');
     }
