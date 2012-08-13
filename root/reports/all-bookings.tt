@@ -1,0 +1,13 @@
+[% USE date %]
+<form class="wufoo" method="GET" action="[% c.uri_for('/reports/room_bookings') %]">
+<header id="header" class="info">
+<h2>All Daily Bookings</h2>
+<div>All bookings on date</div>
+</header>
+<table><tr>
+<td><div id="cal-div"></div></td>
+<td><div id="hall-bookings"></div></td>
+<tr><td colspan="2">
+<div id="room-bookings"></div>
+</td></tr></table>
+</form>

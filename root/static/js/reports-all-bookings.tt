@@ -1,0 +1,25 @@
+function getDailyReport(calendar) {
+  if (calendar.dateClicked) {
+    var y = calendar.date.getFullYear();
+    var m = calendar.date.getMonth();     // integer, 0..11
+    var d = calendar.date.getDate();      // integer, 1..31
+    var date = y + "-" + m + "-" + d;
+    $.get("[% c.uri_for('/reports/daily_hall_bookings') %]", {
+      date  : date
+    }, function(data) {
+      $('#hall-bookings').html(data);
+    } );
+    $.get("[% c.uri_for('/reports/daily_room_bookings') %]", {
+      date  : date
+    }, function(data) {
+      $('#room-bookings').html(data);
+    } );
+  }
+}
+
+$(document).ready(function() {
+  Calendar.setup( {
+    flat          : "cal-div",
+    flatCallback  : getDailyReport
+  } );
+} );

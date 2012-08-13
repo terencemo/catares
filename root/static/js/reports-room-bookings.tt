@@ -1,0 +1,9 @@
+$(document).ready(function() {
+  Calendar.setup( {
+    inputField    : "date",
+    ifFormat      : "%Y-%m-%d",
+    button        : "pick_date",
+    align         : "Bl",
+    singleClick   : true
+  } );
+} );

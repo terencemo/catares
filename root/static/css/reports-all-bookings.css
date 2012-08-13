@@ -1,0 +1,38 @@
+#cal-div {
+  width: 205px;
+  float: left;
+  margin: 0 10px 5px 0;
+}
+#booking-report {
+  width: 530px;
+}
+.wufoo li {
+  width: 98%;
+}
+.mc-table {
+  border: 1px solid #aaa;
+  border-width: 1px 1px 0 0;
+  border-spacing: 0;
+  width: 98%;
+}
+#hb-table {
+  width: 300px;
+  font-size: 85%;
+}
+.mc-table caption {
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #aaa;
+  font-size: 120%;
+  color: #223;
+  font-weight: bold;
+  padding: 10px auto;
+  background-color: #f8f8ff;
+}
+.mc-table th,
+.mc-table td {
+  border: 1px solid #aaa;
+  border-width: 0 0 1px 1px;
+  padding: 3px 6px;
+  text-align: center;
+}

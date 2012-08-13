@@ -1,0 +1,29 @@
+[% IF hbs AND hbs.count() %]
+<table id="hb-table" class="mc-table">
+<caption>Hall Bookings</caption>
+<thead>
+<tr>
+  <th rowspan="1">Hall</th>
+  <th rowspan="1">For</th>
+  <th colspan="1">Time</th>
+  <th rowspan="1">Amenities</th>
+</tr>
+</thead>
+<tbody>
+[% WHILE (hb = hbs.next) %]
+  <tr>
+    <td>[% hb.halltimeslot.hall.name %]</td>
+    <td>[% hb.halltimeslot.timeslot.name %]</td>
+    <td>[% hb.halltimeslot.start %]
+    to [% hb.halltimeslot.end %]</td>
+    <td>[% habs = hb.hallamenitybookings; FOREACH hab IN habs;
+      hab.amenity.name %]:[% hab.count %]
+      [% END %]
+    </td>
+  </tr>
+[% END %]
+</tbody>
+</table>
+[% ELSE %]
+No Hall Bookings
+[% END %]

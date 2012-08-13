@@ -1,0 +1,30 @@
+[% IF rbs AND rbs.count() %]
+<table id="rb-table" class="mc-table">
+<caption>Room Bookings</caption>
+<thead>
+<tr>
+  <th colspan="1">Room</th>
+  <th colspan="1">Class</th>
+  <th colspan="1">Checkin</th>
+  <th colspan="1">Checkout</th>
+  <th colspan="1">Amenities</th>
+</tr>
+</thead>
+<tbody>
+[% WHILE (rb = rbs.next) %]
+  <tr>
+    <td>[% rb.room.number %]</td>
+    <td>[% rb.room.roomclass.name %]</td>
+    <td>[% rb.checkin.substr(0, 10) %]</td>
+    <td>[% rb.checkout.substr(0, 10) %]
+    <td>[% rabs = rb.roomamenitybookings; FOREACH rab IN rabs;
+      rab.amenity.name %]:[% rab.count %]
+      [% END %]
+    </td>
+  </tr>
+[% END %]
+</tbody>
+</table>
+[% ELSE %]
+No Room Bookings
+[% END %]
