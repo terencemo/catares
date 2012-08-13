@@ -6,7 +6,7 @@
 <ul>
   <li><a href="[% c.uri_for('/reports/days_meals') %]">Daily Meals Report</a></li>
   <li><a href="[% c.uri_for('/reports/hall_bookings') %]">Daily Hall Bookings</a></li>
-  <li><a href="[% c.uri_for('/reports/hall_bookings') %]">Daily Room Bookings</a></li>
+  <li><a href="[% c.uri_for('/reports/room_bookings') %]">Daily Room Bookings</a></li>
   <li><a href="[% c.uri_for('/reports/all_bookings') %]">Full Booking Calendar</a></li>
   <li><a href="[% c.uri_for('/reports/collections') %]">User Collections</a></li>
 </ul>
