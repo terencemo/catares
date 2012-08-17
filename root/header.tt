@@ -15,7 +15,7 @@
  [%- END -%]
   <div style="width: 250px">
   <h1><a href="[% c.uri_for('/') %]"><img src="[%-
-    c.uri_for('/static/images/catares-logo.jpg') %]"></a></h1></div>
+    c.uri_for('/static/images/catares-logo-captioned.png') %]"></a></h1></div>
   [%- IF c.session_expires -%]
       [% PROCESS menu.tt %]
   [%- END -%]
