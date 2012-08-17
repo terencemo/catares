@@ -1,6 +1,10 @@
   <td>[% hall.id %]</td>
   <td>[% hall.name %]</td>
   <td>[% hall.descr %]</td>
+  <td>[% IF hall.active; 'Active' -%]
+  [%- ELSE -%]<a class="rates" title="Set rates to activate"
+    href="[% c.uri_for('/hall' hall.id 'rates') %]">Inactive</a>
+    [% END %]</td>
   <td><a class="edit" href="[% c.uri_for('/hall' hall.id 'edit') %]">Edit</a></td>
-  <td><a class="delete" href="[% c.uri_for('/hall' hall.id 'delete') %]">Delete</a></td>
   <td><a class="rates" href="[% c.uri_for('/hall' hall.id 'rates') %]">Rates</a></td>
+  <td><a class="delete" href="[% c.uri_for('/hall' hall.id 'delete') %]">Delete</a></td>

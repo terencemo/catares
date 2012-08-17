@@ -81,7 +81,8 @@ sub get_building_halls {
     my $building_id = shift;
 
     $self->schema->resultset('Halls')->search( {
-        building_id => $building_id
+        building_id => $building_id,
+        active  => 1
     } );
 }
 
@@ -94,6 +95,16 @@ sub edit_hall {
 
     my $parms = { map { $_ => $args{$_} } qw(name descr) };
     $hall->update($parms);
+}
+
+sub activate_hall {
+    my $self = shift;
+    my %args = @_;
+
+    my $hall_id = $args{hall} or die("Need hall id to edit");
+    my $hall = $self->schema->resultset('Halls')->find($hall_id);
+
+    $hall->update( { active => 1 } );
 }
 
 sub delete_hall {
@@ -428,6 +439,8 @@ sub search_halls {
             ]
         };
     }
+
+    $search_args->{active} = 1;
 
     $self->schema->resultset('Halls')->search($search_args);
 }

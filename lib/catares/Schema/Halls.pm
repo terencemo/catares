@@ -18,6 +18,10 @@ __PACKAGE__->add_columns(
                         descr => {
                             data_type => 'varchar',
                             size => 50
+                        },
+                        active => {
+                            data_type => 'bit',
+                            default_value => 0
                         }
 );
 

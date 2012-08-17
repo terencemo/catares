@@ -146,7 +146,10 @@ sub rates :Chained('id') PathPart('rates') Args(0) {
     my $hall = $c->stash->{hall};
     if ('POST' eq $c->req->method()) {
         my $mcount = 0;
+        my $ts_rate;
         while (my $ts = $timeslots->next()) {
+            next unless
+                $ts_rate = $c->req->params->{$ts->name . '_rate'};
             my %parms = (
                 timeslot    => $ts->id,
                 hall        => $hall->id
@@ -156,9 +159,9 @@ sub rates :Chained('id') PathPart('rates') Args(0) {
                 my $key = sprintf("%s_%s_time", $ts->name, $tm);
                 $parms{$tm} = $c->req->params->{$key};
             }
-            $parms{rate} = $c->req->params->{$ts->name . '_rate'};
-            if (my $htss = $conn->get_hall_timeslots(%search_parms)) {
-                my $hts = $htss->first();
+            $parms{rate} = $ts_rate;
+            my $htss;
+            if ($htss = $conn->get_hall_timeslots(%search_parms) and $htss->count) {
                 eval ++$mcount if $conn->edit_hall_timeslot(%parms);
                 if ($@) {
                     $c->log->warn("Editing of ".$ts->name." timeslot failed: $@");
@@ -172,6 +175,9 @@ sub rates :Chained('id') PathPart('rates') Args(0) {
         }
         if ($mcount) {
             $c->stash->{msg} = "$mcount timeslots saved successfully";
+            if (4 == $mcount) {
+                $conn->activate_hall(hall => $hall->id);
+            }
         }
         $timeslots->reset();
     }
