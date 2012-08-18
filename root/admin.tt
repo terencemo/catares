@@ -7,6 +7,10 @@
 
 <ul>
 <li>
+  <span><a href="[% c.uri_for('/buildings/manage') %]">Manage Buildings</a></span>
+</li>
+
+<li>
   <span><a href="[% c.uri_for('/amenities/manage') %]">Manage Amenities</a></span>
 </li>
 
