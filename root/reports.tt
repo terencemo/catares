@@ -9,5 +9,6 @@
   <li><a href="[% c.uri_for('/reports/room_bookings') %]">Daily Room Bookings</a></li>
   <li><a href="[% c.uri_for('/reports/all_bookings') %]">Full Booking Calendar</a></li>
   <li><a href="[% c.uri_for('/reports/collections') %]">User Collections</a></li>
+  <li><a href="[% c.uri_for('/billings') %]">All Billings</a></li>
 </ul>
 </form>

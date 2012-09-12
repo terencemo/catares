@@ -1,0 +1,128 @@
+<form id="bill" method="POST" action="[% c.uri_for('/book') %]">
+<header>
+<h2>Invoice #[% billing.id %]</h2>
+</header>
+<ul>
+<li>
+<label class="desc">Client Name<span style="color:red">*</span>: </label>
+<span>
+<input type="text" readonly class="text field large required" id="fullname" name="fullname" size="50" value="[% client = billing.client; client.fullname %]">
+</span>
+</li>
+<li>
+<label class="desc">Phone/Mobile<span style="color:red">*</span>: </label>
+<span>
+<input type="text" readonly class="text field required" id="phone" name="phone" size="50" value="[% client.phone %]">
+</span>
+</li>
+<li>
+<label class="desc">Address<span style="color:red">*</span>: </label>
+<span>
+<textarea readonly class="text required" rows="5" name="address">[% client.address %]</textarea>
+<!--input type="text" class="text field required" id="fullname" name="fullname" size="50"-->
+</span>
+</li>
+<li>
+[%- billamt = 0 %]
+<table id="billing-table">
+<thead>
+  <tr>
+    <th class="descr first">Description</th>
+    <th class="rate" align="right">Rate (Rs)</th>
+    <th class="qty" align="center">Qty</th>
+    <th class="days" align="right">Days</th>
+    <th class="amt" align="right">Amount (Rs)</th>
+  </tr>
+</thead>
+<tbody>
+[% roombookings = billing.roombookings %]
+[% WHILE ( rb = roombookings.next ) %]
+<tr><td colspan="5" class="first">
+Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
+</tr><tr>
+<td class="first">Base rate</td>
+<td align="right">[% rb.room.roomclass.rate %]</td>
+<td colspan="2" align="right">[% rb.days %]</td>
+<td align="right">[% rb.room.roomclass.rate * rb.days %]</td>
+</tr>
+  [% mealbookings = rb.mealbookings %]
+  [% FOREACH mb IN mealbookings %]
+    [% tsn = mb.meal.timeslot.name;
+      mtype = mb.meal.type;
+      mbookings.$tsn.$mtype.rate =  mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
+      IF mbookings.$tsn.$mtype.count;
+        mbookings.$tsn.$mtype.count = mbookings.$tsn.$mtype.count + mb.count * rb.days;
+      ELSE;
+        mbookings.$tsn.$mtype.count = mb.count * rb.days;
+      END %]
+  [% END %]
+  [% rabs = rb.roomamenitybookings %]
+  [% FOREACH rab IN rabs %]
+    [% am = rab.amenity.name %]
+    [% abookings.$am.rate = rab.amenity.rate UNLESS abookings.$am.rate %]
+    [% IF abookings.$am.count;
+      abookings.$am.count = abookings.$am.count + rab.count;
+    ELSE;
+      abookings.$am.count = rab.count;
+    END %]
+  [% END %]
+  [% billamt = billamt + rb.amount %]
+<tr><td colspan="5" class="first">&nbsp;</td></tr>
+[% END %]
+[% FOREACH hb IN billing.hallbookings %]
+<tr><td colspan="5" class="billitem first">Hall: [% hb.halltimeslot.hall.name %] for
+  [% hb.halltimeslot.timeslot.name %] on [% hb.date.substr(0, 10) %]</td>
+</tr><tr>
+<td class="first">Base rate</td>
+<td align="right">[% hb.halltimeslot.rate %]</td>
+<td align="right" colspan="3">[% hb.halltimeslot.rate %]</td>
+</tr>
+  [% mbs = hb.meal_bookings %]
+  [% WHILE (mb = mbs.next) %]
+    [% tsn = mb.meal.timeslot.name;
+      mtype = mb.meal.type;
+      mbookings.$tsn.$mtype.rate = mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
+      IF mbookings.$tsn.$mtype.count;
+        mbookings.$tsn.$mtype.count = mbookings.$tsn.$mtype.count + mb.count;
+      ELSE;
+        mbookings.$tsn.$mtype.count = mb.count;
+      END %]
+  [% END %]
+  [% habs = hb.hallamenitybookings %]
+  [% FOREACH hab IN habs %]
+    [% am = hab.amenity.name %]
+    [% abookings.$am.rate = hab.amenity.rate UNLESS abookings.$am.rate %]
+    [% IF abookings.$am.count;
+      abookings.$am.count = abookings.$am.count + hab.count;
+    ELSE;
+      abookings.$am.count = hab.count;
+    END %]
+  [% END %]
+  [% billamt = billamt + hb.amount %]
+[% END %]
+  [% FOREACH tsn IN mbookings.keys %]
+    [% FOREACH mtype IN mbookings.$tsn.keys %]
+      <tr><td>[% tsn %] ([% mtype %])</td>
+      <td align="right">[% mbk = mbookings.$tsn.$mtype; mbk.rate %]</td>
+      <td align="right">[% mbk.count %]</td>
+      <td align="right" colspan="2">[% mbk.rate * mbk.count IF (mbk.rate AND mbk.count) %]</td></tr>
+    [% END %]
+  [% END %]
+  [% FOREACH am IN abookings.keys %]
+    <tr><td class="first">[% am %]</td>
+    <td align="right">[% ab = abookings.$am; ab.rate %]</td>
+    <td align="right">[% ab.count %]</td>
+    <td align="right" colspan="2">[% ab.rate * ab.count IF (ab.rate AND ab.count) %]</td></tr>
+  [% END %]
+<tr><td colspan="4" class="first">Total Amount</td>
+<td align="right">[% billamt %]</td></tr>
+</tbody>
+</table>
+
+</li>
+
+  <li class="buttons">
+    <input type="submit" value="Generate Invoice">
+  </li>
+
+</form>

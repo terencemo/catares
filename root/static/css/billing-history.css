@@ -1,0 +1,19 @@
+#billings {
+  margin: 5px 10px;
+  border: 1px solid #aaa;
+  border-width: 1px 1px 0 0;
+  border-spacing: 0;
+  width: 500px;
+}
+
+#billings thead {
+  background-color: #eee;
+}
+
+#billings th,
+#billings td {
+  border: 1px solid #aaa;
+  border-width: 0 0 1px 1px;
+  padding: 3px 4px;
+  text-align: center;
+}

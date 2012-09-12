@@ -616,6 +616,21 @@ sub get_billing {
     $self->schema->resultset('Billings')->find($billing_id);
 }
 
+sub get_billings {
+    my $self = shift;
+
+    $self->schema->resultset('Billings')->search( {
+        booked_by   => $self->user->id
+    } );
+}
+
+sub get_all_billings {
+    my $self = shift;
+    $self->schema->resultset('Billings')->search( {
+        created =>  {   '!='    =>  undef   }
+    } );
+}
+
 sub create_client {
     my $self = shift;
     my %args = @_;

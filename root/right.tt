@@ -1,7 +1,7 @@
 [% USE date %]
 <div id="right" class="wufoo">
-[% IF c.req.path != 'bill' AND c.req.path != 'book' AND billing %]
-<form method="GET" action="[% c.uri_for('/bill') %]">
+[% IF ! c.req.action.match('^(bill|book|/billing/show)$') AND billing %]
+<form method="GET" action="[% c.uri_for('/book') %]">
 <h2>Your Bookings</h2>
 
 <table id="booking-table">

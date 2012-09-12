@@ -1,0 +1,18 @@
+<table id="billings">
+  <thead>
+    <th>Id</th>
+    <th>Date</th>
+    <th>Client Name</th>
+    <th>Client Phone</th>
+    <th>Amount</th>
+  </thead>
+[% WHILE (billing = billings.next) %]
+  <tr>
+    <td><a href="[% c.uri_for('/billing' billing.id 'show') %]">[% billing.id %]</a></td>
+    <td><a href="[% c.uri_for('/billing' billing.id 'show') %]">[% billing.created %]</a></td>
+    <td>[% billing.client.fullname %]</td>
+    <td>[% billing.client.phone %]</td>
+    <td>[% billing.total %]</td>
+  </tr>
+[% END %]
+</table>

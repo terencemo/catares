@@ -114,6 +114,26 @@ sub end : ActionClass('RenderView') {
 
     return 1 if $c->res->body();
 
+    my $roles = $c->stash->{roles};
+    if ($roles) {
+        my $menus = [];
+        $menus = $c->config->{menu}->{Common};
+        $menus = [] unless defined $menus;
+        $menus = [ $menus ] if 'HASH' eq ref($menus);
+        foreach my $role (@$roles) {
+            my $menu = $c->config->{menu}->{$role};
+            next unless defined $menu;
+            $menu = [ $menu ] if 'HASH' eq ref($menu);
+            foreach my $item (@$menu) {
+                unless (grep { $item->{link} eq $_->{link} } @$menus) {
+                    push(@$menus, $item);
+                }
+            }
+        }
+
+        $c->stash->{menus} = $menus;
+    }
+
     $c->stash->{template} ||= 'index.tt';
     unless ($c->stash->{process_file}) {
         my $pf = lc($c->req->path);

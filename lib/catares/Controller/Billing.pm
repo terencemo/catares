@@ -67,6 +67,45 @@ sub bill :Global {
     $c->stash->{includes} = [ 'wufoo' ];
 }
 
+sub history :Local {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    $c->stash->{billings} = $conn->get_billings();
+
+    $c->stash->{process_file} = 'billing/history.tt';
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
+sub id :Chained('/') PathPart('billing') CaptureArgs(1) {
+    my ( $self, $c, $bill_id ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    $c->stash->{billing} = $conn->get_billing($bill_id);
+}
+
+sub show :Chained('id') PathPart('show') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    my $roles = $c->stash->{roles};
+    if (!grep { $_ eq 'Manager' } @$roles and $c->stash->{billing}->booked_by != $conn->user->id) {
+        $c->stash->{process_file} = 'access-violation.tt';
+    } else {
+        $c->stash->{process_file} = 'billing/show.tt';
+    }
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
+sub billings :Global {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    $c->stash->{billings} = $conn->get_all_billings();
+    $c->stash->{process_file} = 'billing/all.tt';
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
 =head1 AUTHOR
 
 Terence Monteiro,,,
