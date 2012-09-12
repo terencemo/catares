@@ -867,4 +867,16 @@ sub get_user {
     $self->schema->resultset('Users')->find($uid);
 }
 
+sub get_clients {
+    my $self = shift;
+
+    $self->schema->resultset('Clients')->search();
+}
+
+sub get_client {
+    my ( $self, $cli_id ) = @_;
+
+    $self->schema->resultset('Clients')->find($cli_id);
+}
+
 1;

@@ -11,11 +11,11 @@
 </li>
 
 <li>
-  <span><a href="[% c.uri_for('/amenities/manage') %]">Manage Amenities</a></span>
+  <span><a href="[% c.uri_for('/meals/manage') %]">Manage Meals</a></span>
 </li>
 
 <li>
-  <span><a href="[% c.uri_for('/meals/manage') %]">Manage Meals</a></span>
+  <span><a href="[% c.uri_for('/amenities/manage') %]">Manage Amenities</a></span>
 </li>
 
 </ul>

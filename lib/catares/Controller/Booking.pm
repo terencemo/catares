@@ -33,8 +33,13 @@ sub book :Global {
     my $bid = $c->session->{billing};
     my $conn = $c->stash->{Connection};
     my $billing = $conn->get_billing($bid);
-    $c->stash->{includes} = [ 'wufoo' ];
+    my $includes = [ 'wufoo' ];
     if ('POST' eq $c->req->method()) {
+        my $cl_id;
+        if ($cl_id = $c->req->params->{client_id}) {
+            $c->log->debug("Got client");
+            $c->session->{client_id} = $cl_id;
+        }
         foreach my $field (qw(fullname phone address)) {
             $c->stash->{$field} =
             $c->session->{"billing.$field"} = $c->req->params->{$field};
@@ -45,7 +50,9 @@ sub book :Global {
             $c->stash->{$field} = $c->session->{"billing.$field"};
         }
         $c->stash->{process_file} = 'book.tt';
+        push(@$includes, 'lightbox');
     }
+    $c->stash->{includes} = $includes;
     $c->stash->{billing} = $billing;
     $c->stash->{roombookings} = $billing->roombookings;
 }

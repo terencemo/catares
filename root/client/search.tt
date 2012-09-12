@@ -1,0 +1,14 @@
+<form id="search-client" action="[% c.uri_for('/client/search') %]" method="POST" style="width:98%">
+<h2>Clients</h2>
+<table class="mc-table">
+[% WHILE (client = clients.next) %]
+<tr>
+  <td><input id="[% clir_id = 'cli-radio-' _ client.id; clir_id %]" type="radio" class="radio" name="client" value="[% client.id %]"></a></td>
+  <td><label for="[% clir_id %]">[% client.fullname %]</label></td>
+  <td><label for="[% clir_id %]">[% client.phone %]</label></td>
+</tr>
+[% END %]
+</table>
+<input type="button" value="Select" onclick="javascript:set_client();">
+<input class="button.close" type="button" value="Close" onclick="javascript:jQuery.fancybox.close();">
+</form>

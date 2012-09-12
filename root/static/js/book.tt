@@ -1,0 +1,37 @@
+$(document).ready(function() {
+  $('#client-new').click(function(e) {
+    $('#client-id').val('');
+    $('#fullname').val('');
+    $('#phone').val('');
+    $('#address').val('');
+    return false;
+  } );
+  $('#client-finder').click(function(e) {
+    $.fancybox.open( {
+      href: this.href,
+      type: 'ajax',
+      minWidth: 300
+    } );
+    $('#search input.button.close').click(function(e) {
+      jQuery.fancybox.close();
+    } );
+    return false;
+  } );
+  $('#search-client').submit(function(e) {
+    return false;
+  } );
+} );
+
+function set_client() {
+  var cli_id = $('#search-client input.radio:checked').attr('value');
+  $.post($('#search-client').attr('action'), {
+    client: cli_id
+  }, function(data) {
+    var c = data.client;
+    $('#client-id').val(c.id);
+    $('#fullname').val(c.fullname);
+    $('#phone').val(c.phone);
+    $('#address').val(c.address);
+  } );
+  jQuery.fancybox.close();
+}
