@@ -35,6 +35,9 @@ __PACKAGE__->add_columns(
                         client_id   => {
                             is_nullable => 1,
                             data_type   => 'integer'
+                        },
+                        quota_id    => {
+                            data_type => 'integer'
                         }
 );
 
@@ -43,5 +46,6 @@ __PACKAGE__->has_many(hallbookings => 'catares::Schema::HallBookings', 'billing_
 __PACKAGE__->has_many(roombookings => 'catares::Schema::RoomBookings', 'billing_id');
 __PACKAGE__->belongs_to(booker => 'catares::Schema::Users', 'booked_by');
 __PACKAGE__->belongs_to(client => 'catares::Schema::Clients', 'client_id');
+__PACKAGE__->belongs_to(quota => 'catares::Schema::Quotas', 'quota_id');
 
 1;

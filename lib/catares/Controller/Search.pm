@@ -28,6 +28,7 @@ sub index :Path :Args(0) {
 #    $conn->get_halls();
 
     $c->stash->{buildings} = $conn->get_buildings();
+    $c->stash->{quotas} = $conn->get_quotas();
     $c->stash->{includes} = [ 'wufoo', 'calendar' ];
     $c->stash->{process_file} = 'search.tt';
 }

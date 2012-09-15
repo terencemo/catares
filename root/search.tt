@@ -5,7 +5,7 @@
 </header>
 
 <ul>
-  <li>
+  <li class="leftHalf">
     <label class="desc">In building</label>
     <span>
     [% IF (buildings.count == 1) -%]
@@ -21,19 +21,30 @@
     [% END %]
     </span>
   </li>
+  [% IF c.config.quotas_enabled %]
+  <li class="rightHalf">
+    <label class="desc">Quota</label>
+      <select id="quota" name="quota">
+      [% WHILE (quota = quotas.next) %]
+        <option value="[% quota.id %]">[% quota.name %]</option>
+      [% END %]
+      </select>
+  </li>
+  [% END %]
+
   <li class="leftHalf">
     <label class="desc">Search for</label>
     <span>
       <input type="radio" class="field radio target" name="target" id="target-hall" value="Hall">
       <label class="choice" for="target-hall">Hall</label>
-    <span>
+    </span>
   </li>
   <li class="rightHalf">
     <label class="desc">&nbsp;</label>
     <span>
       <input type="radio" class="field radio target" name="target" id="target-room" value="Room">
       <label class="choice" for="target-room">Rooms</label>
-    <span>
+    </span>
   </li>
 
   <div id="search-fields">

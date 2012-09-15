@@ -51,6 +51,8 @@ sub search :Local {
     } qw(hall date timeslot);
     $c->stash->{halls} = $conn->search_halls(%parms);
     $c->stash->{amenities} = $conn->get_amenities();
+    $c->stash->{quota} = $conn->get_quota($c->req->params->{quota})
+        if $c->config->{quotas_enabled};
     $c->stash->{includes} = [ 'wufoo' ];
     $c->stash->{process_file} = 'hall/search-results.tt';
 }

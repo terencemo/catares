@@ -879,4 +879,16 @@ sub get_client {
     $self->schema->resultset('Clients')->find($cli_id);
 }
 
+sub get_quotas {
+    my $self = shift;
+
+    $self->schema->resultset('Quotas')->search();
+}
+
+sub get_quota {
+    my ( $self, $qid ) = @_;
+
+    $self->schema->resultset('Quotas')->find($qid);
+}
+
 1;

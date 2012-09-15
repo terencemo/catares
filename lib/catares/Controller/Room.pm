@@ -60,6 +60,8 @@ sub search :Local {
     $c->stash->{rooms} = $conn->search_rooms(%search_args);
     $c->stash->{timeslots} = $conn->get_timeslots();
     $c->stash->{amenities} = $conn->get_amenities();
+    $c->stash->{quota} = $conn->get_quota($c->req->params->{quota})
+        if $c->config->{quotas_enabled};
     $c->stash->{includes} = [ 'wufoo' ];
     $c->stash->{process_file} = 'room/search-results.tt';
 }

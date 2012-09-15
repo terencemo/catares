@@ -25,7 +25,9 @@ li.likert table th {
 
 <input id="timeslot" type="hidden" name="timeslot" value="[% c.req.params.timeslot %]">
 <input id="date" type="hidden" name="date" value="[% c.req.params.date %]">
-
+[% IF c.config.quotas_enabled %]
+<input type="hidden" name="discount" id="discount" value="[% quota.discount %]">
+[% END %]
 <ul>
 <li class="likert">
 <table cellspacing="0">

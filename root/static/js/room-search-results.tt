@@ -1,3 +1,4 @@
+var fact = [% c.config.quotas_enabled ? ( 100 - quota.discount ) / 100 : 1 %];
 var sel = 0;
 
 function reval_cost(rid) {
@@ -14,6 +15,8 @@ function reval_cost(rid) {
     }
   } );
   $.get("[% c.uri_for('/room/') %]" + rid + '/cost', parms, function(data) {
+    data = data * fact;
+//    alert("Cost = " + data);
     $('tr.rm_' + rid + ' td.cost').html(data);
     $('#rm_' + rid + '_cost').val(data);
     if (sel == [% req %]) {
@@ -39,7 +42,11 @@ function reval_total_cost() {
     }
   } );
   var acost = 0;
-  $('input.amen').each(function(i, e) {
+  $('input.amen:checked').each(function(i, e) {
+    var name = $(e).attr('name');
+    acost += $('#' + name + '_cost').val() * [% req %] * fact;
+  } );
+  $('input.amen:text').each(function(i, e) {
     var num = 1;
     if ('checkbox' == $(e).attr('type')) {
       if ($(e).attr('checked') == false) {
@@ -52,7 +59,8 @@ function reval_total_cost() {
       }
     }
     var name = $(e).attr('name');
-    acost += $('#' + name + '_cost').val() * num * [% req %];
+    acost += $('#' + name + '_cost').val() * num * [% req %] * fact;
+//    alert("Amenity cost += " + acost);
   } );
   var cost = dailyCost * [% days %] + acost;
   var html = 'Total estimated cost = ' + cost;
@@ -65,7 +73,7 @@ $(document).ready(function() {
   $('input.rmchk').change(function() {
     if ($(this).attr('checked')) {
       if (sel == [% req %]) {
-        alert("You have already selected [% req %] rooms");
+//        alert("You have already selected [% req %] rooms");
         $(this).attr('checked', false);
         return false;
       }

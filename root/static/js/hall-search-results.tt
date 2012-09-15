@@ -1,3 +1,9 @@
+[% IF c.config.quotas_enabled %]
+var fact = ( 100.0 - [% quota.discount || 0 %] ) / 100.0;
+[% ELSE %]
+var fact = 1.0;
+[% END %]
+
 function reval_cost(hid) {
   var parms = new Object;
   var types = new Array('veg', 'nonveg');
@@ -10,6 +16,7 @@ function reval_cost(hid) {
   }
   parms['timeslot'] = $('#timeslot').val();
   $.get("[% c.uri_for('/hall/') %]" + hid + '/cost', parms, function(data) {
+    data = data * fact;
     $('tr.h_' + hid + ' td.cost').html(data);
     $('#h_' + hid + '_cost').val(data);
     reval_total_cost();
@@ -24,23 +31,34 @@ function reval_total_cost() {
   $('input.hallcost').each(function(i, e) {
 //    alert('Hall cost for ' + $(e).attr('id') + ' = ' + $(e).val());
     if ($(e).val()) { 
-      baseCost += $(e).val()/1;
+      baseCost += $(e).val() / 1;
     }
   } );
-  $('input.amen').each(function(i, e) {
+  $('input.amen:checked').each(function(i, e) {
+    var name = $(e).attr('name');
+    var acost = $('#' + name + '_cost').val() * fact;
+//    alert("Checked amenity cost += " + acost);
+    baseCost += acost;
+  } );
+  $('input.amen:text').each(function(i, e) {
     var num = 1;
     if ('checkbox' == $(e).attr('type')) {
-      if ($(e).attr('checked') == false) {
+//      alert("Amenity[checkbox] " + $(e).attr('name'));
+      if ($(e).attr('checked') != true) {
+//        alert("Checked false");
         return;
       }
     } else {
+//      alert("Amenity[input] " + $(e).attr('name'));
       num = $(e).val();
       if (num == 0) {
+//        alert("Value zero");
         return;
       }
     }
     var name = $(e).attr('name');
-    var acost = $('#' + name + '_cost').val() * num;
+    var acost = $('#' + name + '_cost').val() * num * fact;
+//    alert("Amenity cost += " + acost);
     baseCost += acost;
   } );
   var cost = baseCost;
