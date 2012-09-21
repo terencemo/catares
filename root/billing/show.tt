@@ -4,23 +4,18 @@
 </header>
 <ul>
 <li>
-<label class="desc">Client Name<span style="color:red">*</span>: </label>
-<span>
-<input type="text" readonly class="text field large required" id="fullname" name="fullname" size="50" value="[% client = billing.client; client.fullname %]">
-</span>
-</li>
-<li>
-<label class="desc">Phone/Mobile<span style="color:red">*</span>: </label>
-<span>
-<input type="text" readonly class="text field required" id="phone" name="phone" size="50" value="[% client.phone %]">
-</span>
-</li>
-<li>
-<label class="desc">Address<span style="color:red">*</span>: </label>
-<span>
-<textarea readonly class="text required" rows="5" name="address">[% client.address %]</textarea>
-<!--input type="text" class="text field required" id="fullname" name="fullname" size="50"-->
-</span>
+<table id="billing-header">
+<tr>
+<th>Client: </th><td>[% billing.client.fullname %]</td>
+<th>Date/time: </th><td>[% billing.created %]</td>
+</tr><tr>
+<th>Phone: </th><td>[% billing.client.phone %]</td>
+<th>Organization: </th><td>[% c.config.orgname %]</td>
+</tr><tr>
+<th>Address: </th><td>[% billing.client.address %]</td>
+<th>Address: </th><td>[% c.config.orgaddr %]</td>
+</tr>
+</table>
 </li>
 <li>
 [%- billamt = 0 %]
@@ -122,7 +117,7 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
 </li>
 
   <li class="buttons">
-    <input type="submit" value="Generate Invoice">
+    <input type="submit" value="Print">
   </li>
 
 </form>
