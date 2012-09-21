@@ -207,9 +207,13 @@ sub book :Local {
         $_ => $c->req->params->{$_}
     } qw(hall timeslot date);
     $hall_args{billing} = $billing if $billing;
+    my $fact = 1;
+    if (my $disc = $c->req->parmas->{discount}) {
+        $fact = ( 100 - $disc ) / 100;
+    }
 
     my $hall_bkg = $conn->book_hall(%hall_args);
-    my $hallcost = $hall_bkg->halltimeslot->rate;
+    my $hallcost = $hall_bkg->halltimeslot->rate * $fact;
     $billing = $hall_bkg->billing_id;
 
     my $pre = "h_${hid}_";
@@ -226,7 +230,7 @@ sub book :Local {
                 count       => $qty,
                 days        => 1
             );
-            $hallcost += $meal_bkg->cost;
+            $hallcost += $meal_bkg->cost * $fact;
         }
     }
 
@@ -238,7 +242,7 @@ sub book :Local {
             amenity => $aid,
             count   => $count
         );
-        $hallcost += $am_bkg->cost;
+        $hallcost += $am_bkg->cost * $fact;
     }
 
     $conn->edit_hall_booking(
