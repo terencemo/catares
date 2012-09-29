@@ -646,7 +646,7 @@ sub create_client {
 }
 
 sub edit_billing {
-    my ( $self, $billing_id, $client_id, $charges, $deposit, $total, $discount ) = @_;
+    my ( $self, $billing_id, $client_id, $charges, $deposit, $total, $discount, $paymode ) = @_;
 
     my $parms = {};
     $parms->{booked_by} = $self->user->id;
@@ -655,6 +655,7 @@ sub edit_billing {
     $parms->{charges} = $charges;
     $parms->{deposit} = $deposit ||= $charges * 0.25;
     $parms->{total} = $total;
+    $parms->{paymode} = $paymode;
     $parms->{discount} = $discount ||= 0;
     $self->get_billing($billing_id)->update($parms);
 }
@@ -889,6 +890,18 @@ sub get_quota {
     my ( $self, $qid ) = @_;
 
     $self->schema->resultset('Quotas')->find($qid);
+}
+
+sub create_cheque {
+    my $self = shift;
+    my %args = @_;
+
+    my $parms = {
+        map { $_ => $args{$_} }
+        qw(bank branch cheque_no date billing_id)
+    };
+
+    $self->schema->resultset('Cheques')->create($parms);
 }
 
 1;

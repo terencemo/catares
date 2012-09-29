@@ -208,7 +208,7 @@ sub book :Local {
     } qw(hall timeslot date);
     $hall_args{billing} = $billing if $billing;
     my $fact = 1;
-    if (my $disc = $c->req->parmas->{discount}) {
+    if (my $disc = $c->req->params->{discount}) {
         $fact = ( 100 - $disc ) / 100;
     }
 

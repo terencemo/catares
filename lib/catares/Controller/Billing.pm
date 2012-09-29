@@ -1,5 +1,6 @@
 package catares::Controller::Billing;
 use Moose;
+use Lingua::EN::Numbers::Indian 'num2en';
 use namespace::autoclean;
 
 BEGIN {extends 'Catalyst::Controller'; }
@@ -39,7 +40,7 @@ sub bill :Global {
     if ('POST' eq $c->req->method()) {
         my $charges = $c->req->params->{charges};
         my $deposit = $c->req->params->{deposit};
-        my $total = $c->req->params->{total};
+        my $total = $c->req->params->{paid};
         my $discount = $c->req->params->{discount};
 
         my $client_id = $c->session->{client_id};
@@ -55,10 +56,20 @@ sub bill :Global {
             $c->session->{client_id} = $client_id;
         }
 
+        my $paymode = $c->req->params->{paymode} || 'cash';
+        if ('cheque' eq $paymode) {
+            my %args = map {
+                $_ => $c->req->params->{$_}
+            } qw(bank branch cheque_no);
+            $args{date} = $c->req->params->{cheque_date};
+            $args{billing_id} = $billing->id;
+            my $cheque = $conn->create_cheque(%args);
+        }
+
         $conn->edit_billing($bid, $client_id,
-            $charges, $deposit, $total, $discount);
+            $charges, $deposit, $total, $discount, $paymode);
         $c->session->{billing} = undef;
-        $c->res->redirect($c->uri_for('/'));
+        $c->res->redirect($c->uri_for('/billing', $billing->id, 'show'));
         return;
     }
     $c->stash->{billing} = $billing;
@@ -89,11 +100,13 @@ sub show :Chained('id') PathPart('show') Args(0) {
 
     my $conn = $c->stash->{Connection};
     my $roles = $c->stash->{roles};
-    if (!grep { $_ eq 'Manager' } @$roles and $c->stash->{billing}->booked_by != $conn->user->id) {
+    my $billing = $c->stash->{billing};
+    if (!grep { $_ eq 'Manager' } @$roles and $billing->booked_by != $conn->user->id) {
         $c->stash->{process_file} = 'access-violation.tt';
     } else {
         $c->stash->{process_file} = 'billing/show.tt';
     }
+    $c->stash->{words} = uc(num2en($billing->total));
     $c->stash->{includes} = [ 'wufoo' ];
 }
 

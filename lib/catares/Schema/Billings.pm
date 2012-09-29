@@ -38,6 +38,10 @@ __PACKAGE__->add_columns(
                         },
                         quota_id    => {
                             data_type => 'integer'
+                        },
+                        paymode     => {
+                            data_type => 'varchar',
+                            size      => 50
                         }
 );
 
@@ -47,5 +51,6 @@ __PACKAGE__->has_many(roombookings => 'catares::Schema::RoomBookings', 'billing_
 __PACKAGE__->belongs_to(booker => 'catares::Schema::Users', 'booked_by');
 __PACKAGE__->belongs_to(client => 'catares::Schema::Clients', 'client_id');
 __PACKAGE__->belongs_to(quota => 'catares::Schema::Quotas', 'quota_id');
+__PACKAGE__->has_one(cheque => 'catares::Schema::Cheques', 'billing_id');
 
 1;

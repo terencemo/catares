@@ -1,10 +1,13 @@
+@import url("/static/css/bill-table.css");
+
 #bill {
-  font-family: Times;
+  font-family: Verdana, 'Times New Roman', Times;
   margin: 5px auto 5px 10px;
 }
 
 #billing-header {
   width: 95%;
+  font-family: Verdana, 'Times New Roman', Times;
 /*  border: 1px solid #aaa;*/
 }
 
@@ -18,73 +21,4 @@
   vertical-align: top;
   width: 35%;
 /*  border: 1px solid #aaa;*/
-}
-
-#billing-table {
-  width: 95%;
-  border: 1px solid #aaa;
-  border-spacing: 0;
-  border-collapse: collapse;
-  background-color: #f8f8f8;
-}
-
-#billing-table thead {
-  background-color: #e6e6e6;
-}
-
-#billing-table thead th,
-#billing-table thead td {
-  color: black;
-}
-
-#billing-table tr.leading,
-#billing-table tr.total {
-  background-color: #eee;
-}
-
-#billing-table tr.leading td,
-#billing-table tr.total td {
-  color: black;
-}
-
-#billing-table th,
-#billing-table td {
-  color: #222;
-  border: 1px dotted #aaa;
-  padding: 2px 5px;
-}
-
-#billing-table th {
-  text-align: right;
-  font-family: Times;
-  font-weight: normal;
-  font-size: 120%;
-}
-
-#billing-table tbody th.first,
-#billing-table tbody td.first {
-  text-align: left;
-  background-color: #eee;
-}
-
-#billing-table td.billitem {
-  font-size: 110%;
-}
-
-#billing-table thead th.descr {
-  width: 25%;
-}
-
-#billing-table thead th.rate,
-#billing-table thead th.amt {
-  width: 20%;
-}
-
-#billing-table thead th.qty,
-#billing-table thead th.days {
-  width: 15%;
-}
-
-#billing-table tbody tr td input {
-  text-align: right;
 }

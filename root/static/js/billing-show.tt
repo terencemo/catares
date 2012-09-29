@@ -1,18 +1,24 @@
 $(document).ready(function() {
     $('#bill').submit(function(e) {
-        $('#bill').printElement( {
+        $('#content').printElement( {
+          printMode: 'popup',
             overrideElementCSS: [
                 "[% ss = c.uri_for('/static/css/bill.css'); ss %]",
                 {
                   href: "[% ss %]",
                   media: "print"
                 },
-                "[% ss = c.uri_for('/static/css/form.css'); ss %]",
+                [% ss = c.uri_for('/static/css/form.css') %]
                 {
                   href: "[% ss %]",
                   media: "print"
                 },
-                "[% ss = c.uri_for('/static/css/theme.css'); ss %]",
+                [% ss = c.uri_for('/static/css/theme.css') %]
+                {
+                  href: "[% ss %]",
+                  media: "print"
+                },
+                "[% ss = c.uri_for('/static/css/bill-print.css'); ss %]",
                 {
                   href: "[% ss %]",
                   media: "print"

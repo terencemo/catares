@@ -30,16 +30,16 @@ div.fancybox-inner table {
 <input type="text" class="text field large required" id="fullname" name="fullname" size="50" value="[% fullname %]">
 </span>
 </li>
-<li>
+<li class="leftHalf">
 <label class="desc">Phone/Mobile<span style="color:red">*</span>: </label>
 <span>
-<input type="text" class="text field required" id="phone" name="phone" size="50" value="[% phone %]">
+<input type="text" class="text field required small" id="phone" name="phone" size="20" value="[% phone %]">
 </span>
 </li>
-<li>
+<li class="rightHalf">
 <label class="desc">Address<span style="color:red">*</span>: </label>
 <span>
-<textarea id="address" class="text required" rows="5" name="address">[% address %]</textarea>
+<textarea id="address" class="text required" rows="3" cols="25" name="address">[% address %]</textarea>
 </span>
 </li>
 <li>
@@ -48,10 +48,10 @@ div.fancybox-inner table {
 <thead>
   <tr>
     <th class="descr first">Description</th>
-    <th class="rate" align="right">Rate&nbsp;(Rs)</th>
+    <th class="rate" align="right">Rate(&#8377;)</th>
     <th class="qty" align="center">Qty</th>
     <th class="days" align="right">Days</th>
-    <th class="amt" align="right">Amt&nbsp;(Rs)</th>
+    <th class="amt" align="right">Amt(&#8377;)</th>
   </tr>
 </thead>
 <tbody>
@@ -66,6 +66,7 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
 </tr>
   [% mealbookings = rb.mealbookings %]
   [% FOREACH mb IN mealbookings %]
+    [% NEXT UNLESS mb.count %]
     [% tsn = mb.meal.timeslot.name;
       mtype = mb.meal.type;
       mbookings.$tsn.$mtype.rate =  mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
@@ -77,6 +78,7 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
   [% END %]
   [% rabs = rb.roomamenitybookings %]
   [% FOREACH rab IN rabs %]
+    [% NEXT UNLESS rab.count %]
     [% am = rab.amenity.name %]
     [% abookings.$am.rate = rab.amenity.rate UNLESS abookings.$am.rate %]
     [% IF abookings.$am.count;
@@ -98,6 +100,7 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
 </tr>
   [% mbs = hb.meal_bookings %]
   [% WHILE (mb = mbs.next) %]
+    [% NEXT UNLESS mb.count %]
     [% tsn = mb.meal.timeslot.name;
       mtype = mb.meal.type;
       mbookings.$tsn.$mtype.rate = mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
@@ -109,6 +112,7 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
   [% END %]
   [% habs = hb.hallamenitybookings %]
   [% FOREACH hab IN habs %]
+    [% NEXT UNLESS hab.count %]
     [% am = hab.amenity.name %]
     [% abookings.$am.rate = hab.amenity.rate UNLESS abookings.$am.rate %]
     [% IF abookings.$am.count;

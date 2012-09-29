@@ -45,6 +45,7 @@ sub book :Global {
             $c->session->{"billing.$field"} = $c->req->params->{$field};
         }
         $c->stash->{process_file} = 'bill.tt';
+        push(@$includes, 'calendar');
     } else {
         foreach my $field (qw(fullname phone address)) {
             $c->stash->{$field} = $c->session->{"billing.$field"};

@@ -1,0 +1,50 @@
+@import url("/static/css/bill-table.css");
+
+#central {
+  width: 560px;
+}
+
+#bill {
+  font-family: Helvetica, Arial, 'Times New Roman', Times;
+  margin: 5px auto 5px 10px;
+}
+
+#bill h2 {
+  font-family: 'Times New Roman', Times;
+  font-weight: normal;
+  font-size: 175%;
+  margin: 0.3em auto 0.3em 0.3em;
+  -webkit-margin-after: 0.1em;
+  -webkit-margin-before: 0.1em;
+}
+
+table.bill-header {
+  width: 95%;
+/*  border: 1px solid #aaa;*/
+}
+
+table.bill-header th {
+  width: 15%;
+  vertical-align: top;
+  text-align: left;
+  font-weight: normal;
+  font-family: 'Times New Roman', Times;
+/*  border: 1px solid #aaa;*/
+}
+
+table.bill-header th.client {
+  width: 11%;
+}
+
+table.bill-header td {
+  vertical-align: top;
+  width: 37%;
+  font-family: Helvetica, Arial;
+/*  border: 1px solid #aaa;*/
+}
+
+li, li.leftHalf, li.rightHalf {
+    text-align: left;
+    font-family: Helvetica, Arial;
+    font-size: 115%;
+}

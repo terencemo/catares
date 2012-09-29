@@ -1,31 +1,41 @@
+var amt;
+
 $(document).ready(function() {
-    $('#bill').submit(function(e) {
-        $('#bill').printElement( {
-            overrideElementCSS: [
-                "[% ss = c.uri_for('/static/css/bill.css'); ss %]",
-                {
-                  href: "[% ss %]",
-                  media: "print"
-                },
-                "[% ss = c.uri_for('/static/css/form.css'); ss %]",
-                {
-                  href: "[% ss %]",
-                  media: "print"
-                },
-                "[% ss = c.uri_for('/static/css/theme.css'); ss %]",
-                {
-                  href: "[% ss %]",
-                  media: "print"
-                },
-            ]
-        } );
-        return true;
-    } );
     $('#discount').change(function(e) {
         $('#discamt').val($('#discount').val() * $('#charges').val() / 100);
         $('#total').val($('#charges').val() - $('#discamt').val());
         $('#deposit').val($('#total').val() * 0.25);
         $('#payable').val(parseFloat($('#total').val()) +
             parseFloat($('#deposit').val()));
+    } );
+    $('#paid').change(function(e) {
+      var diffAmt = $(this).val() - $('#payable').val();
+      if (diffAmt >= 0) {
+        var newdep = $(this).val() - $('#total').val();
+        if (diffAmt > 0) {
+          alert("Amount paid is higher. Extra will be refunded as deposit");
+        }
+        $('#deposit').val(newdep);
+      } else {
+        alert("Amount is less. Part payment requires higher approval");
+      }
+      amt = $(this).val();
+    } );
+    $('#cheque_info').hide();
+    Calendar.setup( {
+        inputField      :       "cheque_date",
+        ifFormat        :       "%Y-%m-%d",
+        button          :       "dtPicker",
+        align           :       "Bl",
+        singleClick     :       true
+    } );
+    $('li.paymode input').change(function(e) {
+      $('li.paymode input:checked').each(function(i, e) {
+        if ('cheque' == $(e).val()) {
+          $('#cheque_info').show();
+        } else {
+          $('#cheque_info').hide();
+        }
+      } );
     } );
 } );

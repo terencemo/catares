@@ -1,0 +1,20 @@
+@import url("/static/css/form.css");
+@import url("/static/css/structure.css");
+@import url("/static/css/theme.css");
+@import url("/static/css/billing-show.css");
+
+html {
+    background-color: #ffffff;
+}
+
+#central {
+  width: 98%;
+}
+
+#bill h2 {
+  text-align: left;
+}
+
+li, li.leftHalf, li.rightHalf {
+    text-align: left;
+}

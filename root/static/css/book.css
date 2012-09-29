@@ -1,22 +1,48 @@
 #bill {
-  font-family: Times;
   margin: 5px auto 5px 10px;
 }
 
+#bill h2 {
+  font-family: Tahoma, Verdana, 'Trebuchet MS';
+  font-weight: normal;
+}
+
+#bill li {
+  font-family: Verdana, 'Trebuchet MS', 'Comic Sans MS', Georgia, Garamond, Tahoma;
+}
+
+#bill label {
+  font-weight: normal;
+  font-family: Times;
+  font-size: 120%;
+}
+
 #billing-table {
-  width: 80%;
+  width: 100%;
 }
 
 #billing-table th {
-  text-align: right;
-  font-family: Times;
+  text-align: center;
   font-weight: normal;
   font-size: 120%;
+  font-family: Serif, Times;
+}
+
+#billing-table td {
+  font-family: Tahoma;
+  color: #383838;
+  padding-right: 20px;
+}
+
+#billing-table th,
+#billing-table td {
+  min-width: 17%;
 }
 
 #billing-table th.first,
 #billing-table td.first {
   text-align: left;
+  min-width: 32%;
 }
 
 #billing-table td.billitem {
