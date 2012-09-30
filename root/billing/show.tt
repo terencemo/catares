@@ -42,7 +42,8 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
 </tr>
   [% mealbookings = rb.mealbookings %]
   [% FOREACH mb IN mealbookings %]
-    [% tsn = mb.meal.timeslot.name;
+    [% NEXT UNLESS mb.count;
+      tsn = mb.meal.timeslot.name;
       mtype = mb.meal.type;
       mbookings.$tsn.$mtype.rate =  mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
       IF mbookings.$tsn.$mtype.count;
@@ -53,7 +54,7 @@ Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
   [% END %]
   [% rabs = rb.roomamenitybookings %]
   [% FOREACH rab IN rabs %]
-    [% am = rab.amenity.name %]
+    [% NEXT UNLESS rab.count; am = rab.amenity.name %]
     [% abookings.$am.rate = rab.amenity.rate UNLESS abookings.$am.rate %]
     [% IF abookings.$am.count;
       abookings.$am.count = abookings.$am.count + rab.count;
