@@ -31,7 +31,7 @@
 </thead>
 <tbody>
 [% roombookings = billing.roombookings %]
-[% WHILE ( rb = roombookings.next ) %]
+[% FOREACH rb IN roombookings %]
 <tr><td colspan="5" class="first">
 Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
 </tr><tr>
