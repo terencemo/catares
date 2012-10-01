@@ -30,7 +30,7 @@ sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
     # Hello World
-    $c->response->body( $c->welcome_message );
+    $c->stash->{template} = 'blank.tt';
     $c->res->redirect($c->uri_for('/search'));
 }
 
@@ -128,6 +128,12 @@ sub end : ActionClass('RenderView') {
                 unless (grep { $item->{link} eq $_->{link} } @$menus) {
                     push(@$menus, $item);
                 }
+            }
+        }
+        foreach my $menu (@$menus) {
+            $c->log->debug("Menu item: " . $menu->{title});
+            if ("/" . $c->req->path eq $menu->{link}) {
+                $c->session->{cur_menu} = $menu->{link};
             }
         }
 

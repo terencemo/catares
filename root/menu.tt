@@ -3,7 +3,8 @@
       [% CALL c.log.debug('Menus: ' _ menus) %]
       [% CALL c.log.debug('Total menus: ' _ menus.size) %]
       [% FOREACH item IN menus %]
-        <li[% ' class="curr"' IF (item.link.match('^/' _ c.req.path)) %]><a href="[% c.uri_for(item.link) %]">
+      <li[% ' class="curr"' IF (item.link == c.session.cur_menu) %]>
+        <a href="[% c.uri_for(item.link) %]">
             [%- IF item.img -%]
               <img src="[% c.uri_for(item.img) %]" alt="[% item.title %]" />
             [%- END -%]

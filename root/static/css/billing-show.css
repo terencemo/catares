@@ -43,7 +43,7 @@ table.bill-header td {
 /*  border: 1px solid #aaa;*/
 }
 
-li, li.leftHalf, li.rightHalf {
+#central.li, #centarl.li.leftHalf, #central.li.rightHalf {
     text-align: left;
     font-family: Helvetica, Arial;
     font-size: 115%;

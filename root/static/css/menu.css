@@ -1,28 +1,34 @@
 .nav {
-  font-size: 13px;
+  font-size: 115%;
   width: 100%;
 /*  background: url('/static/images/table-bg.png') repeat-x left bottom; */
 }  
 .nav .menu {
   list-style-type: none;
-  padding: 0;
+  padding: 0 0 3px 0;
   margin: 0 1px 0 0;
   width: 100%;
-  height: 22px;
+  height: 24px;
+/*  border-bottom: 1px solid #d4d6d7;*/
 }
 .nav .menu ul {
   list-style-type: none;
   padding: 0 1em 0 0 ;
   margin: 0;
   width: 100%;
-  background: url('/static/images/table-bg.png') repeat-x left bottom;
   height: 22px;
 }
 .nav .menu li {
   float: left;
-  margin: 0 0 0;
+  margin: 0 4px 0 0;
   position: relative;
   padding: 0.2em;
+  background: url('/static/images/menu-bg.png') repeat-x left bottom;*/
+  border-radius: 5px 8px 0 0;
+  -moz-border-radius: 5px 8px 0 0;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #ddd;
 }
 .nav .menu li a {
   text-decoration: none;
@@ -31,16 +37,24 @@
   margin: 3px 3px 0 0;
   text-transform: capitalize;
 }
+
+.nav .menu li.curr {
+  background: url('/static/images/menu-fg.png') repeat-x left bottom;
+}
+
 .nav .menu li.curr a {
-  color: #c66;
+  color: #a70;
+  font-weight: bold;
+  font-size: 110%;
 }
 .nav .menu li a img {
   vertical-align: top;
 }
 .nav .menu li a:hover {
   text-decoration: none;
-/*  color: #8A2621;*/
-  color: #B22;
+  font-weight: bold;
+/*  color: #8A2621;
+  color: #B22;*/
 /*  background: #555; */
   padding: 0.3em;
   margin: 3px 3px 0 0;
