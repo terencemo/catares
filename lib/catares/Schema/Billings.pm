@@ -45,6 +45,12 @@ __PACKAGE__->add_columns(
                         }
 );
 
+sub status {
+    my $self = shift;
+
+    return $self->checkout ? 'checked out' : 'booked';
+}
+
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->has_many(hallbookings => 'catares::Schema::HallBookings', 'billing_id');
 __PACKAGE__->has_many(roombookings => 'catares::Schema::RoomBookings', 'billing_id');
@@ -52,5 +58,6 @@ __PACKAGE__->belongs_to(booker => 'catares::Schema::Users', 'booked_by');
 __PACKAGE__->belongs_to(client => 'catares::Schema::Clients', 'client_id');
 __PACKAGE__->belongs_to(quota => 'catares::Schema::Quotas', 'quota_id');
 __PACKAGE__->has_one(cheque => 'catares::Schema::Cheques', 'billing_id');
+__PACKAGE__->has_one(checkout => 'catares::Schema::Checkouts', 'billing_id');
 
 1;
