@@ -1,0 +1,143 @@
+<form id="bill-checkout" method="POST" action="[% c.uri_for('/billing/checkout') %]">
+<header id="header" class="info">
+<h2>Invoice #[% billing.id %]</h2>
+</header>
+<ul>
+<li>
+<table id="billing-header" class="bill-header">
+<tr>
+<th class="client">Client: </th><td>[% billing.client.fullname %]</td>
+<th>Date/time: </th><td>[% billing.created %]</td>
+</tr><tr>
+<th class="client">Phone: </th><td>[% billing.client.phone %]</td>
+<th>Organization: </th><td>[% c.config.orgname %]</td>
+</tr><tr>
+<th class="client">Address: </th><td>[% billing.client.address %]</td>
+<th>Address: </th><td>[% c.config.orgaddr %]</td>
+</tr>
+</table>
+</li>
+<li>
+[%- billamt = 0 %]
+<table id="billing-table" class="billing">
+<thead>
+  <tr>
+    <th class="descr first">Description</th>
+    <th class="amt" align="right">Amt(&#8377;)</th>
+  </tr>
+</thead>
+<tbody>
+[% roombookings = billing.roombookings %]
+[% FOREACH rb IN roombookings %]
+<tr><td class="first">
+Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
+<td align="right">[% rb.room.roomclass.rate * rb.days %]</td>
+</tr><tr>
+  [% mealbookings = rb.mealbookings %]
+  [% FOREACH mb IN mealbookings %]
+    [% NEXT UNLESS mb.count;
+      tsn = mb.meal.timeslot.name;
+      mtype = mb.meal.type;
+      mbookings.$tsn.$mtype.rate =  mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
+      IF mbookings.$tsn.$mtype.count;
+        mbookings.$tsn.$mtype.count = mbookings.$tsn.$mtype.count + mb.count * rb.days;
+      ELSE;
+        mbookings.$tsn.$mtype.count = mb.count * rb.days;
+      END %]
+  [% END %]
+  [% rabs = rb.roomamenitybookings %]
+  [% FOREACH rab IN rabs %]
+    [% NEXT UNLESS rab.count; am = rab.amenity.name %]
+    [% abookings.$am.rate = rab.amenity.rate UNLESS abookings.$am.rate %]
+    [% IF abookings.$am.count;
+      abookings.$am.count = abookings.$am.count + rab.count;
+    ELSE;
+      abookings.$am.count = rab.count;
+    END %]
+  [% END %]
+  [% billamt = billamt + rb.amount %]
+[% END %]
+[% FOREACH hb IN billing.hallbookings %]
+<tr><td class="billitem first">Hall: [% hb.halltimeslot.hall.name %] for
+  [% hb.halltimeslot.timeslot.name %] on [% hb.date.substr(0, 10) %]</td>
+<td align="right">[% hb.halltimeslot.rate %]</td>
+</tr>
+  [% mbs = hb.meal_bookings %]
+  [% WHILE (mb = mbs.next) %]
+    [% NEXT UNLESS mb.count;
+      tsn = mb.meal.timeslot.name;
+      mtype = mb.meal.type;
+      mbookings.$tsn.$mtype.rate = mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
+      IF mbookings.$tsn.$mtype.count;
+        mbookings.$tsn.$mtype.count = mbookings.$tsn.$mtype.count + mb.count;
+      ELSE;
+        mbookings.$tsn.$mtype.count = mb.count;
+      END %]
+  [% END %]
+  [% habs = hb.hallamenitybookings %]
+  [% FOREACH hab IN habs %]
+    [% NEXT UNLESS hab.count %]
+    [% am = hab.amenity.name %]
+    [% abookings.$am.rate = hab.amenity.rate UNLESS abookings.$am.rate %]
+    [% IF abookings.$am.count;
+      abookings.$am.count = abookings.$am.count + hab.count;
+    ELSE;
+      abookings.$am.count = hab.count;
+    END %]
+  [% END %]
+  [% billamt = billamt + hb.amount %]
+[% END %]
+  [% foodsubtotal = 0 %]
+  [% FOREACH tsn IN mbookings.keys %]
+    [% FOREACH mtype IN mbookings.$tsn.keys %]
+      [% mbk = mbookings.$tsn.$mtype %]
+      [% foodsubtotal = foodsubtotal + mbk.rate * mbk.count IF (mbk.rate AND mbk.count) %]
+    [% END %]
+  [% END %]
+  [% IF foodsubtotal %]
+  <tr>
+    <td class="first">Food Subtotal </td>
+    <td align="right">[% foodsubtotal %]</td>
+  </tr>
+  [% END %]
+  [% amsubtotal = 0 %]
+  [% FOREACH am IN abookings.keys %]
+    [% ab = abookings.$am %]
+    [% amsubtotal = amsubtotal + ab.rate * ab.count IF (ab.rate AND ab.count) %]
+  [% END %]
+  [% IF amsubtotal %]
+    <tr>
+      <td class="first">Amenities subtotal </td>
+      <td align="right">[% amsubtotal %]</td>
+    </tr>
+  [% END %]
+<tr><td class="first">Total Cost</td>
+<td align="right">[% billing.charges %]</td></tr>
+<tr><td class="first">Amt Paid</td>
+<td align="right">[% billing.total %]</td></tr>
+<tr><td class="first">Deposit</td>
+<td align="right">[% billing.deposit %]</td></tr>
+<tr><td colspan="2" class="first">Penalties</td></tr>
+<tr><td class="first">Late checkout: </td>
+<td align="right">
+  <input type="text" class="small penalty" size="3" id="late_checkout" name="late_checkout" value="0">
+</td></tr>
+<tr><td class="first">Damages &amp; other penalties: </td>
+<td align="right">
+  <input type="text" class="small penalty" size="3" id="damages" name="damages" value="0">
+</td></tr>
+<tr><td class="first">Refund: </td>
+<td align="right" id="refund-td">[% billing.deposit %]</td></tr>
+<input type="hidden" id="billing_id" name="billing_id" value="[% billing.id %]">
+<input type="hidden" id="deposit" value="[% billing.deposit %]">
+<input type="hidden" id="refund" name="refund" value="[% billing.deposit %]">
+</tbody>
+</table>
+
+</li>
+
+  <li class="buttons">
+    <input type="submit" value="Checkout">
+  </li>
+
+</form>

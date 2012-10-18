@@ -660,6 +660,15 @@ sub edit_billing {
     $self->get_billing($billing_id)->update($parms);
 }
 
+sub cancel_billing {
+    my ( $self, $billing_id ) = @_;
+
+    my $billing = $self->schema->resultset('Billings')->find($billing_id)
+        or die("Can't find billing $billing_id");
+
+    $billing->delete;
+}
+
 sub get_days_meals {
     my ( $self, $date ) = @_;
 
@@ -902,6 +911,38 @@ sub create_cheque {
     };
 
     $self->schema->resultset('Cheques')->create($parms);
+}
+
+sub checkout_billing {
+    my $self = shift;
+
+    my %args = @_;
+
+    if ($self->schema->resultset('Checkouts')->find($args{billing_id})) {
+        die("Billing #" . $args{billing_id} . " already checked out");
+    }
+
+    my $parms = {
+        map { $_ => $args{$_} }
+        qw(billing_id late_penalty damages)
+    };
+
+    $parms->{checked_out} = strftime("%Y-%m-%d %T", localtime(time));
+
+    $self->schema->resultset('Checkouts')->create($parms);
+}
+
+sub edit_rb_times {
+    my ( $self, $rb, $newtime ) = @_;
+
+    my ( $checkin, $checkout ) = map {
+        s/ .*/ $newtime/; $_
+    } ( $rb->checkin, $rb->checkout );
+
+    $rb->update( {
+        checkin => $checkin,
+        checkout => $checkout
+    } );
 }
 
 1;

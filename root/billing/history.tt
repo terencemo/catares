@@ -1,18 +1,31 @@
-<table id="billings">
+<form id="billing-form" class="wufoo" method="GET" action="[% c.uri_for('/billing/checkout') %]">
+<table id="billings" class="billing">
   <thead>
+    <th>&nbsp;</th>
     <th>Id</th>
     <th>Date</th>
+    <th>Status</th>
     <th>Client Name</th>
     <th>Client Phone</th>
     <th>Amount</th>
   </thead>
 [% WHILE (billing = billings.next) %]
   <tr>
-    <td><a href="[% c.uri_for('/billing' billing.id 'show') %]">[% billing.id %]</a></td>
-    <td><a href="[% c.uri_for('/billing' billing.id 'show') %]">[% billing.created %]</a></td>
+    <td><input type="radio" name="billing_id" value="[% billing.id %]"></td>
+    <td><a href="[% c.uri_for('/billing' billing.id 'edit') %]">[% billing.id %]</a></td>
+    <td><a href="[% c.uri_for('/billing' billing.id 'edit') %]">[% billing.created %]</a></td>
+    <td>[% billing.status %]</td>
     <td>[% billing.client.fullname %]</td>
     <td>[% billing.client.phone %]</td>
     <td>[% billing.total %]</td>
   </tr>
 [% END %]
 </table>
+<ul>
+<li>
+<input type="submit" value="Checkout">
+<!--input type="button" id="edit-btn" value="Edit"-->
+<input type="button" id="cancel-btn" value="Cancel">
+</li>
+</ul>
+</form>

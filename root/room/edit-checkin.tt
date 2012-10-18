@@ -1,0 +1,8 @@
+<form id="edit_checkin" method="POST" action="[% c.uri_for('/roombooking/edit_checkin') %]">
+<h3>Edit Checkin-time</h3>
+  <label>Checkin time: </label>
+  [% INCLUDE 'html/time-select.tt' prefix = 'checkin', showtime = checkin.substr(12,16) %]
+  <input type="hidden" id="checkin_orig" name="checkin_orig" value="[% checkin %]">
+  <input type="hidden" id="billing_id" value="[% billing_id %]">
+  <input type="button" value="Save" onclick="javascript:edit_checkin();">
+</form>

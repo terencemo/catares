@@ -1,6 +1,6 @@
 [% USE date %]
 <div id="right" class="wufoo">
-[% IF ! c.req.action.match('^(bill|book|/billing/show)$') AND billing %]
+[% IF ! c.req.action.match('^(bill|book|/billing/(show|edit_bid)|billing/(edit|cancel|checkout))$') AND billing %]
 <form method="GET" action="[% c.uri_for('/book') %]">
 <h2>Your Bookings</h2>
 
@@ -28,25 +28,7 @@ style="border-top: 1px dotted #777">Room No.
   <td colspan="2" class="billitem first"
     style="border-top: 1px dotted #777">[% hb.halltimeslot.timeslot.name %] @
   [% hb.halltimeslot.hall.name %] on [% hb.date.substr(0, 10) %]</td>
-</tr><!--tr>
-<td class="first">Base rate</td>
-<td align="right">[% hb.halltimeslot.rate %]</td>
-<td align="right" colspan="3">[% hb.halltimeslot.rate %]</td>
-</tr-->
-  [%# mb = hb.mealbooking %]
-  [%# FOREACH mb IN mealbookings %]
-    <!--tr><td class="first">[% mb.meal.timeslot.name %] ([% mb.meal.type %])</td>
-    <td align="right">[% mb.meal.rate %]</td>
-    <td align="right">[% mb.count %]</td>
-    <td colspan="2" align="right">[% mb.cost %]</td></tr-->
-  [%# END %]
-  [%# habs = hb.hallamenitybookings %]
-  [%# FOREACH hab IN habs %]
-    <!--tr><td class="first">[% hab.amenity.name %]</td>
-    <td align="right">[% hab.amenity.rate %]</td>
-    <td align="right">[% hab.count %]</td>
-    <td align="right" colspan="2">[% hab.cost %]</td></tr-->
-  [%# END %]
+</tr>
   <tr><td colspan="1" class="first">Subtotal</td>
   <td align="right">Rs. [% hb.amount; billamt = billamt + hb.amount %]</td></tr>
 [% END %]

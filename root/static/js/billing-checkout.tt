@@ -1,0 +1,8 @@
+$(document).ready(function(e) {
+  $('input.penalty').change(function(e) {
+    var refund = $('#deposit').val() - $('#late_checkout').val() - $('#damages').val();
+    alert("Refund: " + refund);
+    $('#refund-td').html(refund);
+    $('#refund').val(refund);
+  } );
+} );

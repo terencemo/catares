@@ -119,6 +119,74 @@ sub billings :Global {
     $c->stash->{includes} = [ 'wufoo' ];
 }
 
+sub edit :Local {
+    my ( $self, $c ) = @_;
+
+    my $conn = $c->stash->{Connection};
+    my $billing_id = $c->req->params->{billing_id};
+    $c->stash->{billing} = $conn->get_billing($billing_id);
+    $c->stash->{process_file} = 'billing/edit.tt';
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
+sub edit_bid :Chained('id') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash->{process_file} = 'billing/edit.tt';
+    $c->stash->{includes} = [ 'wufoo', 'lightbox' ];
+}
+
+sub cancel :Local {
+    my ( $self, $c ) = @_;
+
+    if ('POST' eq $c->req->method()) {
+        my $billing_id = $c->req->params->{billing_id};
+        eval {
+            $c->stash->{Connection}->cancel_billing($billing_id);
+        };
+        if ($@) {
+            $c->stash->{msg} = "Error cancelling billing $billing_id: $@";
+            $c->stash->{msg_type} = "error";
+        } else {
+            $c->stash->{msg} = "Successfully cancelled billing $billing_id";
+        }
+        $c->stash->{process_file} = 'blank.tt';
+    }
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
+sub checkout :Local {
+    my ( $self, $c ) = @_;
+
+    my $billing_id = $c->req->params->{billing_id};
+    my $conn = $c->stash->{Connection};
+    $c->stash->{billing} = $conn->get_billing($billing_id);
+
+    if ('POST' eq $c->req->method()) {
+        my $late_penalty = $c->req->params->{late_checkout} || 0;
+        my $damages = $c->req->params->{damages} || 0;
+        my %args = (
+            billing_id      => $billing_id,
+            late_penalty    => $late_penalty,
+            damages         => $damages
+        );
+        
+        eval {
+        $conn->checkout_billing(%args);
+        };
+
+        if ($@) {
+            $c->stash->{msg} = "Error checking out billing $billing_id: $@";
+            $c->stash->{msg_type } = "error";
+        } else {
+            $c->stash->{msg} = "Successfully checked out billing $billing_id";
+        }
+    }
+
+    $c->stash->{process_file} = 'billing/checkout.tt';
+    $c->stash->{includes} = [ 'wufoo' ];
+}
+
 =head1 AUTHOR
 
 Terence Monteiro,,,

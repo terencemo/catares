@@ -25,4 +25,63 @@ h1 {
 .footer a:hover {
   color: green;
 }
-
+#msg {
+  margin: 15px 25px;
+  padding: 5px 8px;
+  border-width: 1px;
+  border-style: solid;
+}
+#msg.msg {
+  border-color: #ad8;
+  background-color: #cfb;
+  color: #362;
+}
+#msg.error {
+  border-color: #da8;
+  background-color: #fcb;
+  color: #632;
+}
+table.table-style {
+  text-align: left;
+  border-collapse: collapse;
+  font-weight: normal;
+  font-size: 13px;
+  margin-bottom: 1em;
+}
+table.table-style th,
+table.table-style thead tr {
+  background: url('/static/images/table-bg.png') repeat-x bottom left;
+  height: 22px;
+  color: #555;
+  font-size: 13px;
+  font-weight: normal;
+  font-family: arial;
+  border: 1px solid #ccc;
+  padding-left: 6px;
+}
+table.table-style td {
+  border-right: 1px solid #ccc;
+  padding: 4px;
+}
+a {
+  text-decoration: none;
+  color: #308;
+}
+a:visited {
+  color: #907;
+}
+input.button, input.submit,
+input[type="button"], input[type="submit"] {
+  color: #221;
+  background-color: #e4e4e0;
+  border-width: 1px;
+/*  border-top-color: #eee;
+  border-left-color: #eee;
+  border-bottom-color: #e4e4e4;
+  border-right-color: #e4e4e4;*/
+  padding: 4px 8px;
+}
+input.button:hover, input.submit:hover,
+input[type="button"]:hover, input[type="submit"]:hover {
+  background-color: #f0f0f0;
+}

@@ -1,0 +1,195 @@
+<form id="bill" method="POST" action="[% c.uri_for('/book') %]">
+<header id="header" class="info">
+<h2>Invoice #[% billing.id %]</h2>
+</header>
+<ul>
+<li>
+  <table id="billing-header" class="bill-header">
+    <tr>
+      <th class="client">Client: </th><td>[% billing.client.fullname %]</td>
+      <th>Date/time: </th><td>[% billing.created %]</td>
+    </tr><tr>
+      <th class="client">Phone: </th><td>[% billing.client.phone %]</td>
+      <th>Organization: </th><td>[% c.config.orgname %]</td>
+    </tr><tr>
+      <th class="client">Address: </th><td>[% billing.client.address %]</td>
+      <th>Address: </th><td>[% c.config.orgaddr %]</td>
+    </tr>
+  </table>
+</li>
+  [% IF (roombookings = billing.roombookings) %]
+<li>
+  <h3>Room Bookings</h3>
+  [% rbs = {} %]
+  [% FOREACH rb IN roombookings %]
+    [% ckey = rb.checkin _ '/' _ rb.checkout %]
+    [% UNLESS rbs.$ckey %]
+      [% rbs.$ckey = {
+        rnos => [ rb.room.number ],
+        rbs => [ rb ],
+        checkin => rb.checkin,
+        checkout => rb.checkout
+      } %]
+    [% END %]
+    [% rbs.$ckey.rnos.push(rb.room.number) %]
+    [% rbs.$ckey.rbs.push(rb) %]
+  [% END %]
+  <table id="roombookings" class="billing">
+  <thead><tr>
+    <th>Room Nos</th>
+    <th>Checked In</th>
+    <th>Checked Out</th>
+  </tr></thead>
+  <tbody>
+  [% FOREACH ckey IN rbs.keys %]
+  [% rb = rbs.$ckey %]
+  <tr>
+    <td>#[% rb.rnos.join(', #') %]</td>
+    <td>[% rb.checkin.substr(0, 16) %] <a href="[% c.uri_for('/roombooking/edit_checkin', {
+      checkin => rb.checkin,
+      billing_id => billing.id
+    } ) %]">Edit</a></td>
+    <td>[% rb.checkout.substr(0, 10) %]</td>
+  </tr>
+  [% END %]
+  </tbody>
+  </table>
+</li>
+  [% END %]
+  [%- billamt = 0 %]
+<li>
+  <table id="billing-table" class="billing">
+    <thead>
+      <tr>
+        <th class="descr first">Description</th>
+        <th class="rate" align="right">Rate(&#8377;)</th>
+        <th class="qty" align="center">Qty</th>
+        <th class="days" align="right">Days</th>
+        <th class="amt" align="right">Amt(&#8377;)</th>
+      </tr>
+    </thead>
+  <tbody>
+  [% FOREACH rb IN roombookings %]
+  <tr><td colspan="5" class="first">
+    Room no: [% rb.room.number %] ([% rb.room.roomclass.name %])</td>
+  </tr><tr>
+    <td class="first">Base rate</td>
+    <td align="right">[% rb.room.roomclass.rate %]</td>
+    <td colspan="2" align="right">[% rb.days %]</td>
+    <td align="right">[% rb.room.roomclass.rate * rb.days %]</td>
+  </tr>
+    [% mealbookings = rb.mealbookings %]
+    [% FOREACH mb IN mealbookings %]
+    [% NEXT UNLESS mb.count;
+      tsn = mb.meal.timeslot.name;
+      mtype = mb.meal.type;
+      mbookings.$tsn.$mtype.rate =  mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
+      IF mbookings.$tsn.$mtype.count;
+        mbookings.$tsn.$mtype.count = mbookings.$tsn.$mtype.count + mb.count * rb.days;
+      ELSE;
+        mbookings.$tsn.$mtype.count = mb.count * rb.days;
+      END %]
+  [% END %]
+  [% rabs = rb.roomamenitybookings %]
+  [% FOREACH rab IN rabs %]
+    [% NEXT UNLESS rab.count; am = rab.amenity.name %]
+    [% abookings.$am.rate = rab.amenity.rate UNLESS abookings.$am.rate %]
+    [% IF abookings.$am.count;
+      abookings.$am.count = abookings.$am.count + rab.count;
+    ELSE;
+      abookings.$am.count = rab.count;
+    END %]
+  [% END %]
+  [% billamt = billamt + rb.amount %]
+  [% END %]
+  [% FOREACH hb IN billing.hallbookings %]
+  <tr><td colspan="5" class="billitem first">Hall: [% hb.halltimeslot.hall.name %] for
+    [% hb.halltimeslot.timeslot.name %] on [% hb.date.substr(0, 10) %]</td>
+  </tr><tr>
+    <td class="first">Base rate</td>
+    <td align="right">[% hb.halltimeslot.rate %]</td>
+    <td align="right" colspan="3">[% hb.halltimeslot.rate %]</td>
+  </tr>
+    [% mbs = hb.meal_bookings %]
+    [% WHILE (mb = mbs.next) %]
+      [% NEXT UNLESS mb.count;
+        tsn = mb.meal.timeslot.name;
+        mtype = mb.meal.type;
+        mbookings.$tsn.$mtype.rate = mb.meal.rate UNLESS mbookings.$tsn.$mtype.rate;
+        IF mbookings.$tsn.$mtype.count;
+          mbookings.$tsn.$mtype.count = mbookings.$tsn.$mtype.count + mb.count;
+        ELSE;
+          mbookings.$tsn.$mtype.count = mb.count;
+        END %]
+    [% END %]
+    [% habs = hb.hallamenitybookings %]
+    [% FOREACH hab IN habs %]
+      [% NEXT UNLESS hab.count %]
+      [% am = hab.amenity.name %]
+      [% abookings.$am.rate = hab.amenity.rate UNLESS abookings.$am.rate %]
+      [% IF abookings.$am.count;
+        abookings.$am.count = abookings.$am.count + hab.count;
+      ELSE;
+        abookings.$am.count = hab.count;
+      END %]
+    [% END %]
+    [% billamt = billamt + hb.amount %]
+  [% END %]
+    [% FOREACH tsn IN mbookings.keys %]
+      [% FOREACH mtype IN mbookings.$tsn.keys %]
+        <tr><td>[% tsn %] ([% mtype %])</td>
+        <td align="right">[% mbk = mbookings.$tsn.$mtype; mbk.rate %]</td>
+        <td align="right">[% mbk.count %]</td>
+        <td align="right" colspan="2">[% mbk.rate * mbk.count IF (mbk.rate AND mbk.count) %]</td></tr>
+      [% END %]
+    [% END %]
+    [% FOREACH am IN abookings.keys %]
+      <tr><td class="first">[% am %]</td>
+        <td align="right">[% ab = abookings.$am; ab.rate %]</td>
+        <td align="right">[% ab.count %]</td>
+        <td align="right" colspan="2">[% ab.rate * ab.count IF (ab.rate AND ab.count) %]</td></tr>
+    [% END %]
+  <tr><td colspan="4" class="first">Total Cost</td>
+    <td align="right">[% billing.charges %]</td></tr>
+  <tr><td colspan="4" class="first">Deposit</td>
+    <td align="right">[% billing.deposit %]</td></tr>
+  <tr><td colspan="4" class="first">Payable</td>
+    <td align="right">[% billing.charges * 1.25 %]</td></tr>
+  <tr><td colspan="4" class="first">Amt Paid</td>
+    <td align="right">[% billing.total %]</td></tr>
+  </tbody>
+  </table>
+</li>
+
+<li>
+  <label>Payment Mode: </label>
+  [% billing.paymode FILTER ucfirst %]<br />
+  [% IF 'cheque' == billing.paymode %]
+    [% cheque = billing.cheque %]
+  </li>
+  <li class="leftHalf">
+    <label>Bank: </label>[% cheque.bank %]
+  </li>
+  <li class="rightHalf">
+    <label>Branch: </label>[% cheque.branch %]
+  </li>
+  <li class="leftHalf">
+    <label>Date: </label>[% cheque.date.substr(0, 10) %]
+  </li>
+  <li class="rightHalf">
+    <label>Cheque No: </label>[% cheque.cheque_no %]
+  </li>
+  [% END %]
+</li>
+
+<li>
+<p>* Minimum deposit is 25% of the total cost. Full deposit amount is
+refundable after deduction for damages, if any.</p>
+
+</li>
+
+  <li class="buttons">
+    <input type="submit" value="Print">
+  </li>
+
+</form>

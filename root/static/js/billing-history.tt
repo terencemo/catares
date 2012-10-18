@@ -1,0 +1,7 @@
+$(document).ready(function(e) {
+  $('#cancel-btn').click(function(e) {
+    $('#billing-form').attr('action', "[% c.uri_for('/billing/cancel') %]");
+    $('#billing-form').attr('method', 'POST');
+    $('#billing-form').submit();
+  } );
+} );

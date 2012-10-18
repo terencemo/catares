@@ -1,3 +1,5 @@
+@import url("/static/css/bill-table.css");
+
 #billings {
   margin: 5px 10px;
   border: 1px solid #aaa;
@@ -7,13 +9,21 @@
 }
 
 #billings thead {
-  background-color: #eee;
+  background-color: #f8f8f8;
 }
 
 #billings th,
 #billings td {
   border: 1px solid #aaa;
   border-width: 0 0 1px 1px;
-  padding: 3px 4px;
+  padding: 1px;
   text-align: center;
+}
+
+table.billing td {
+  font-size: 85%;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+table.billing td a {
+  font-family: 'Times New Roman', Times, serif;
 }

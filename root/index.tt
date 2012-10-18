@@ -3,7 +3,7 @@
   <div id="content">
     <div id="central">
     [% IF msg OR c.flash.msg -%]
-      <div id=msg>[% msg || c.flash.msg %]</div>
+      <div id="msg" class="[% msg_type || 'msg' %]">[% msg || c.flash.msg %]</div>
     [%- END -%]
 
     [% PROCESS $process_file %]

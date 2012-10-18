@@ -1,0 +1,33 @@
+$(document).ready(function() {
+  $('#roombookings tr td a').click(function(e) {
+    $.fancybox.open( {
+      href: this.href,
+      type: 'ajax',
+      minWidth: 300
+    } );
+    return false;
+  } );
+} );
+
+function checkin_changed() {
+//  alert("checkin changed");
+  var hh = $('#checkin_hh').val();
+  var mm = $('#checkin_mm').val();
+  if (hh || mm) {
+//    alert("Checkin time changed");
+    var tm = hh + ':' + mm;
+//    alert("New checkin at " + tm);
+    $('#checkin_time').val(tm);
+  }
+}
+
+function edit_checkin() {
+  checkin_changed();
+  $.post($('#edit_checkin').attr('action'), {
+    checkin_time: $('#checkin_time').val(),
+    checkin_orig: $('#checkin_orig').val(),
+    billing_id: $('#billing_id').val()
+  }, function(data) {
+  } );
+  jQuery.fancybox.close();
+}
