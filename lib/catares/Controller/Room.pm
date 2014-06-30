@@ -51,7 +51,7 @@ sub search :Local {
     my $delta = DateCalc(map {
         ParseDate($c->req->params->{$_})
     } qw(checkin_date checkout_date), \$err);
-    my $days = sprintf("%d", Delta_Format($delta, 1, "%dh"));
+    my $days = sprintf("%d", Delta_Format($delta, 2, "%.2ddh"));
 
     $c->stash->{days} = $days;
     $c->stash( {
